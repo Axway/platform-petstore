@@ -1,0 +1,10 @@
+pubsub:
+  key: ""
+  secret: ""
+  hostname: ""
+platform:
+  hostname: ""
+logging:
+  level: "INFO"
+  loggers:
+    com.axway: "DEBUG"

@@ -1,0 +1,14 @@
+# Properties files created by build not in target
+git.properties
+
+# Maven
+target/
+
+# IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea
+
+# OSX Rubbish
+.DS_Store

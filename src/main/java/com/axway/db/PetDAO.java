@@ -2,27 +2,13 @@ package com.axway.db;
 
 import com.axway.api.Pet;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
- * Mock storage class for Pet instances.
+ * Storage interface for Pet instances.
  */
-public class PetDAO {
-
-    /**
-     * An internal mapping of Pet instances.
-     */
-    private final Map<String, Pet> pets;
-
-    /**
-     * Constructs a new storage class.
-     */
-    public PetDAO() {
-        this.pets = new HashMap<>();
-    }
+public interface PetDAO {
 
     /**
      * Create a new {@link Pet} instance.
@@ -30,18 +16,14 @@ public class PetDAO {
      * @param pet
      *      the {@link Pet} instance to store.
      */
-    public void create(Pet pet) {
-        this.pets.put(pet.getId(), pet);
-    }
+    void create(Pet pet);
 
     /**
      * Retrieve all {@link Pet} instances.
      *
      * @return a {@link Stream} of {@link Pet} instances.
      */
-    public Stream<Pet> get() {
-        return this.pets.values().stream();
-    }
+    Stream<Pet> get();
 
     /**
      * Retrieve a specific {@link Pet} instance.
@@ -51,7 +33,5 @@ public class PetDAO {
      * @return
      *      a potential {@link Pet} instance if found.
      */
-    public Optional<Pet> get(String id) {
-        return Optional.ofNullable(this.pets.get(id));
-    }
+    Optional<Pet> get(String id);
 }

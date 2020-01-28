@@ -2,6 +2,7 @@ package com.axway;
 
 import com.axway.client.pubsub.PubSubClient;
 import com.axway.db.PetDAO;
+import com.axway.db.PetMemoryDAO;
 import com.axway.health.PetStoreHealthCheck;
 import com.axway.resources.EventResource;
 import com.axway.resources.IndexResource;
@@ -61,7 +62,7 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
             configuration.getPubSubConfiguration().getSecret()
         );
 
-        PetDAO petDAO = new PetDAO();
+        PetDAO petDAO = new PetMemoryDAO();
 
         environment.healthChecks().register("pet-store", new PetStoreHealthCheck());
 

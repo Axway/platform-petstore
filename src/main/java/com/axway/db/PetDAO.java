@@ -34,4 +34,12 @@ public interface PetDAO {
      *      a potential {@link Pet} instance if found.
      */
     Optional<Pet> get(String id);
+
+    /**
+     * Removes a specific {@link Pet} instance.
+     *
+     * @param id
+     *      the identifier of the {@link Pet} to remove.
+     */
+    void remove(String id);
 }

@@ -3,13 +3,7 @@ package com.axway.resources;
 import com.axway.api.Pet;
 import com.axway.db.PetDAO;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.Collection;
 import java.util.Comparator;
@@ -67,6 +61,18 @@ public class PetResource {
     @Path("/{petId}")
     public Optional<Pet> findById(@PathParam("petId") String petId) {
         return this.pets.get(petId);
+    }
+
+    /**
+     * Removes a {@link Pet} by an identifier.
+     *
+     * @param petId
+     *      the identifier of the pet to remove.
+     */
+    @DELETE
+    @Path("/{petId}")
+    public void removeById(@PathParam("petId") String petId) {
+        this.pets.remove(petId);
     }
 
     /**

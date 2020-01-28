@@ -56,4 +56,14 @@ public class PetMemoryDAO implements PetDAO {
     public Optional<Pet> get(String id) {
         return Optional.ofNullable(this.pets.get(id));
     }
+
+    /**
+     * Removes a {@link Pet} instance.
+     *
+     * @param id
+     *      the identifier of the {@link Pet} to retrieve.
+     */
+    public void remove(String id) {
+        this.pets.remove(id);
+    }
 }

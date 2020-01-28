@@ -94,6 +94,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
+    delete:
+      summary:
+      operationId: removeById
+      tags:
+        - pets
 components:
   schemas:
     Pet:

@@ -5,6 +5,7 @@ import com.axway.api.Pet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
@@ -33,7 +34,15 @@ public class PetMemoryDAO implements PetDAO {
      *      the {@link Pet} instance to store.
      */
     public void create(Pet pet) {
-        this.pets.put(pet.getId(), pet);
+        if (!pet.getId().isPresent()) {
+            pet = new Pet(
+                UUID.randomUUID().toString(),
+                pet.getName(),
+                pet.getPhoto(),
+                pet.getTag()
+            );
+        }
+        this.pets.put(pet.getId().get(), pet);
     }
 
     /**

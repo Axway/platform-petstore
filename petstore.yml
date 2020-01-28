@@ -111,6 +111,8 @@ components:
           type: string
         name:
           type: string
+        photo:
+          type: string
         tag:
           type: string
     Pets:

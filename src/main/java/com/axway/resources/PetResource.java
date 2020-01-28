@@ -44,7 +44,8 @@ public class PetResource {
     @GET
     public Collection<Pet> find(@QueryParam("limit") Optional<Integer> limit) {
         return this.pets.get()
-                .sorted(Comparator.comparing(Pet::getId))
+                .filter(pet -> pet.getId().isPresent())
+                .sorted(Comparator.comparing(left -> left.getId().get()))
                 .limit(limit.filter(i -> i <= 100).orElse(100))
                 .collect(Collectors.toList());
     }

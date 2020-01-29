@@ -53,45 +53,11 @@
   </div>
   <!-- table -->
   <div class="container-fluid pt-25 pb-45 pr-45 pl-45">
-    <div id="pet-content">
-      <!-- Modal -->
-      <div class="modal fade" id="add-pet-modal" tabindex="-1" role="dialog" aria-labelledby="add-pet-label" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="add-pet-label">Add Pet</h5>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-              </button>
-            </div>
-            <div class="modal-body">
-              <form id="form-pet-add">
-                <div class="form-group">
-                  <label for="add-pet-name">Pet Name</label>
-                  <input type="text" class="form-control" id="add-pet-name">
-                </div>
-                <div class="form-group">
-                  <label for="add-pet-name">Pet Type</label>
-                  <input type="text" class="form-control" id="add-pet-type">
-                </div>
-                <div class="form-group">
-                  <label for="add-pet-image">Pet Image</label>
-                  <input type="text" class="form-control" id="add-pet-image">
-                  <small id="pet-image-text" class="form-text text-muted">The pet image url</small>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" onclick="postPet()">Submit</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <div id="pet-modal"></div>
 
     <!-- pet grid -->
     <div id="pet-tiles" class="row">
+  </div>
 </body>
 
 <script>
@@ -99,6 +65,72 @@
   class UserInfo extends React.Component {
     render() {
       return React.createElement('span', null, null, `You are logged as ${this.props.firstname} ${this.props.lastname}, ${this.props.role} in ${this.props.org}`);
+    }
+  }
+
+  class PetModal extends React.Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        petName: '',
+        petType: '',
+        petImage: ''
+      };
+
+      this.handleChange = this.handleChange.bind(this);
+    }
+
+    handleChange(event) {
+      const target = event.target;
+      const value = target.value;
+      const name = target.name;
+
+      this.setState({
+        [name]: value
+      });
+    }
+
+    render() {
+      var element =
+        React.createElement('div', { id: 'add-pet-modal', className: 'modal fade', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'add-pet-label', 'aria-hidden': 'true' },
+          React.createElement('div', { className: 'modal-dialog', role: 'document' },
+            React.createElement('div', { className: 'modal-content' },
+              React.createElement('div', { className: 'modal-header' },
+                React.createElement('h5', { id: 'add-pet-label', className: 'modal-title' }, 'Add Pet'),
+                React.createElement('button', { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close'},
+                  React.createElement('span', { 'aria-hidden': 'true'}, '×'))),
+              React.createElement('div', { className: 'modal-body' },
+                React.createElement('form', { id: 'form-pet-add' },
+                  React.createElement('div', { className: 'form-group '},
+                    React.createElement('label', { htmlFor: 'add-pet-name' }, 'Pet Name'),
+                    React.createElement('input', { id: 'add-pet-name', type: 'text', className: 'form-control', name: "petName", value: this.state.petName, onChange: this.handleChange })),
+                  React.createElement('div', { className: 'form-group'},
+                    React.createElement('label', { className: 'add-pet-type' }, 'Pet Type'),
+                    React.createElement('input', { id: 'add-pet-type', type: 'text', className: 'form-control', name: "petType", value: this.state.petType, onChange: this.handleChange })),
+                  React.createElement('div', { className: 'form-group' },
+                    React.createElement('label', { htmlFor: 'add-pet-image' }, 'Pet Image'),
+                    React.createElement('input', { id: 'add-pet-image', type: 'text', className: 'form-control', name: "petImage", value: this.state.petImage, onChange: this.handleChange }),
+                    React.createElement('small', { className: 'form-text text-muted'})))),
+              React.createElement('div', { className: 'modal-footer' },
+                React.createElement('button', { type: 'button', className: 'btn btn-secondary', 'data-dismiss': 'modal' }, 'Close'),
+                React.createElement('button', { type: 'button', className: 'btn btn-primary', onClick: () => this.create() }, 'Submit')))));
+
+      return element;
+    }
+
+    create() {
+      var data = {
+        name: this.state.petName,
+        tag: this.state.petType,
+        photo: this.state.petImage
+      };
+
+      var request = new XMLHttpRequest();
+      request.open('POST', '/api/v1/pet', true);
+      request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+      request.send(JSON.stringify(data));
+
+      $('#add-pet-modal').modal('hide');
     }
   }
 
@@ -169,6 +201,7 @@
     }
   }
 
+  ReactDOM.render(React.createElement(PetModal, {}, null), document.getElementById('pet-modal'));
   ReactDOM.render(React.createElement(PetGrid, {}, null), document.getElementById('pet-tiles'));
 
   // set unified nav title
@@ -183,21 +216,6 @@
     var session = Appc.data('session');
 
     ReactDOM.render(React.createElement(UserInfo, { firstname: user.firstname, lastname: user.lastname, role: session.role, org: org.name }), document.getElementById('app-user-info'));
-  }
-
-  function postPet() {
-    var data = {
-      name: document.getElementById('add-pet-name').value,
-      tag: document.getElementById('add-pet-type').value,
-      photo: document.getElementById('add-pet-image').value
-    };
-
-    var request = new XMLHttpRequest();
-    request.open('POST', '/api/v1/pet', true);
-    request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-    request.send(JSON.stringify(data));
-
-    $('#add-pet-modal').modal('hide');
   }
 </script>
 

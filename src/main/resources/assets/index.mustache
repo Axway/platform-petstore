@@ -24,6 +24,10 @@
 			cursor: pointer;
 			color: gray
 		}
+
+		.pet-type {
+			color: #407ca0;
+		}
 	</style>
 
     <!-- JS -->
@@ -182,8 +186,9 @@
 								React.createElement('img', { className: 'pet-grid', src: pet.photo })),
 							React.createElement('div', { className: 'landing-actions bg-feather p-2 pt-1' },
 								React.createElement('span', { className: 'd-inline-block pt-1 px-2 text-nowrap align-middle font-weight-bold' }, pet.name),
-								React.createElement('span', { className: canDelete, onClick: () => this.delete(pet.id) }, 'Delete'))));
-
+								React.createElement('span', { className: canDelete, onClick: () => this.delete(pet.id) }, 'Delete',
+									React.createElement('i', { className: 'platform-icon-trash icon-sm'})),
+								React.createElement('div', { className: 'pet-type' }, pet.type))));
 				children.push(element);
 			});
 

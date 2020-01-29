@@ -3,6 +3,8 @@ package com.axway;
 import com.axway.client.mbaas.MbaasClient;
 import com.axway.client.pubsub.PubSubClient;
 import com.axway.db.PetDAO;
+import com.axway.db.PetMbaasDAO;
+import com.axway.db.PetMemoryDAO;
 import com.axway.health.PetStoreHealthCheck;
 import com.axway.resources.EventResource;
 import com.axway.resources.IndexResource;
@@ -73,8 +75,8 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         // Select the storage mechanism for this service by uncommenting one of
         // the following lines to construct a PetDAO implementation.
         //
-        // petDAO = new PetMemoryDAO();
-        // petDAO = new PetMbaasDAO(mbaas);
+        petDAO = new PetMemoryDAO();
+        // petDAO = new PetMbaasDAO(mbaas, pubsub);
 
         // Register a basic health check for our service using the Dropwizard APIs
         environment.healthChecks().register("pet-store", new PetStoreHealthCheck());

@@ -24,6 +24,12 @@ public class EventResource {
      */
     @POST
     public void receive(Event event) {
-        // TODO: do something with a received PubSub event
+        // This API will fire once an event has been received from the PubSub service.
+        //
+        // In our application, we can use this to know when a Pet has been added or removed,
+        // and so we can notify any attached browsers to reload their UI to display the latest
+        // set of pets. This allows the UI to be much more "reactive", and avoids having to poll.
+        //
+        // TODO: Implement an example of notifying the UI of changes sent by PubSub
     }
 }

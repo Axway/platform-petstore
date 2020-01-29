@@ -3,11 +3,13 @@ package com.axway.resources;
 import com.axway.api.Pet;
 import com.axway.db.PetDAO;
 
+import javax.annotation.Nonnull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -30,8 +32,8 @@ public class PetResource {
      * @param pets
      *      the storage instance used to store/fetch {@link Pet} instances.
      */
-    public PetResource(PetDAO pets) {
-        this.pets = pets;
+    public PetResource(@Nonnull PetDAO pets) {
+        this.pets = Objects.requireNonNull(pets);
     }
 
     /**

@@ -11,6 +11,9 @@ import java.util.Objects;
  */
 public class Event {
 
+    public static final String PET_CREATE_EVENT = "com.axway.pko.pet.create";
+    public static final String PET_REMOVE_EVENT = "com.axway.pko.pet.remove";
+
     /**
      * The name of the event instance.
      */

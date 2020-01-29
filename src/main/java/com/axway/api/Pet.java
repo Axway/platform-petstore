@@ -26,9 +26,9 @@ public class Pet {
     private String name;
 
     /**
-     * A tag used to represent the Pet instance.
+     * A type used to represent the Pet instance.
      */
-    private String tag;
+    private String type;
 
     /**
      * A link to a photo of the Pet.
@@ -51,14 +51,14 @@ public class Pet {
      *      the name of the pet being created.
      * @param photo
      *      a link to a photo of the pet.
-     * @param tag
+     * @param type
      *      a tag used to identify the photo type.
      */
-    public Pet(@Nullable String id, @Nonnull String name, @Nonnull URL photo, @Nonnull String tag) {
+    public Pet(@Nullable String id, @Nonnull String name, @Nonnull URL photo, @Nonnull String type) {
         this.id = Optional.ofNullable(id);
         this.name = Objects.requireNonNull(name);
         this.photo = Objects.requireNonNull(photo);
-        this.tag = Objects.requireNonNull(tag);
+        this.type = Objects.requireNonNull(type);
     }
 
     /**
@@ -92,12 +92,12 @@ public class Pet {
     }
 
     /**
-     * Retrieves the tag of the pet.
+     * Retrieves the type of the pet.
      *
-     * @return a {@link String} tag related to the pet.
+     * @return a {@link String} type related to the pet.
      */
     @JsonProperty
-    public String getTag() {
-        return this.tag;
+    public String getType() {
+        return this.type;
     }
 }

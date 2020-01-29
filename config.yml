@@ -3,6 +3,14 @@ mbaas:
   hostname: ""
   username: ""
   password: ""
+entitlements:
+  apiUri: "https://e9t-staging.admin.staging.appctest.com/api/v2/organizations"
+  organizationId: "0edec891-8bb8-4a14-89bd-0a0f4e7cdeba"
+  axwayId:
+    clientId: "pko-2020-service"
+    clientSecret: "c7afe019-3807-4073-833c-cf0d77c3b0bc"
+    baseUri: "https://login-preprod.axway.com"
+    realm: "Broker"
 pubsub:
   key: ""
   secret: ""

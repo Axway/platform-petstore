@@ -3,6 +3,8 @@ package com.axway;
 import com.axway.client.mbaas.MBaasConfiguration;
 import com.axway.client.platform.PlatformConfiguration;
 import com.axway.client.pubsub.PubSubConfiguration;
+import com.axway.entitlements.EntitlementsConfiguration;
+
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -15,6 +17,11 @@ public class PetStoreConfiguration extends Configuration {
      * The internal MBaaS configuration instance.
      */
     private MBaasConfiguration mbaas = new MBaasConfiguration();
+
+    /**
+     * The internal configuration instance for the Entitlements Service.
+     */
+    private EntitlementsConfiguration entitlements = new EntitlementsConfiguration();
 
     /**
      * The internal Platform configuration instance.
@@ -48,6 +55,26 @@ public class PetStoreConfiguration extends Configuration {
     }
 
     /**
+     * JSON getter for the Entitlements Service configuration.
+     *
+     * @return configuration for ES connectivity.
+     */
+    @JsonProperty("entitlements")
+	public EntitlementsConfiguration getEntitlementsConfiguration() {
+		return entitlements;
+	}
+
+    /**
+     * JSON setter for the Entitlements Service configuration.
+     *
+     * @param entitlements configuration for ES connectivity.
+     */
+    @JsonProperty("entitlements")
+	public void setEntitlementsConfiguration(EntitlementsConfiguration entitlements) {
+		this.entitlements = entitlements;
+	}
+
+  /**
      * JSON getter for the Platform configuration.
      *
      * @return a {@link PlatformConfiguration} instance.

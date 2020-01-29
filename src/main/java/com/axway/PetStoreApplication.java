@@ -87,5 +87,8 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         environment.jersey().register(new EventResource());
         environment.jersey().register(new IndexResource(configuration));
         environment.jersey().register(new PetResource(petDAO));
+
+        // Use this instead of the above for integration with the Entitlements Service.
+        // environment.jersey().register(new PetResource(petDAO, new EntitlementsEnforcer(configuration.getEntitlementsConfiguration())));
     }
 }

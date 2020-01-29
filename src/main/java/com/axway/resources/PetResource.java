@@ -2,6 +2,7 @@ package com.axway.resources;
 
 import com.axway.api.Pet;
 import com.axway.db.PetDAO;
+import com.axway.entitlements.EntitlementsEnforcer;
 
 import javax.annotation.Nonnull;
 import javax.ws.rs.*;
@@ -26,15 +27,31 @@ public class PetResource {
      */
     private final PetDAO pets;
 
+    private final EntitlementsEnforcer entitlementsEnforcer;
+
     /**
-     * Constructs a new resource with a storage instance.
-     *
-     * @param pets
-     *      the storage instance used to store/fetch {@link Pet} instances.
-     */
-    public PetResource(@Nonnull PetDAO pets) {
-        this.pets = Objects.requireNonNull(pets);
-    }
+	 * Constructs a new resource with a storage instance.
+	 *
+	 * @param pets                 the storage instance used to store/fetch
+	 *                             {@link Pet} instances.
+	 * @param entitlementsEnforcer ensures the numbers of perts in store is within
+	 *                             bounds; this filtering could be abstracted, but
+	 *                             kept in this way for brevity.
+	 */
+	public PetResource(@Nonnull PetDAO pets, EntitlementsEnforcer entitlementsEnforcer) {
+		this.pets = Objects.requireNonNull(pets);
+		this.entitlementsEnforcer = entitlementsEnforcer;
+	}
+
+	/**
+	 * Constructs a new resource with a storage instance, without any enforcement of
+	 * business logic.
+	 *
+	 * @param pets the storage instance used to store/fetch {@link Pet} instances.
+	 */
+	public PetResource(@Nonnull PetDAO pets) {
+		this(pets, null);
+	}
 
     /**
      * Retrieves all {@link Pet} instances.
@@ -87,6 +104,9 @@ public class PetResource {
      */
     @POST
     public void create(Pet pet) throws IOException {
+		if (entitlementsEnforcer != null && !entitlementsEnforcer.isAdditionAllowed(pets, pet)) {
+			throw new IOException("Too many pets currently in store/not entitled for adding a new one.");
+		}
         this.pets.create(pet);
     }
 }

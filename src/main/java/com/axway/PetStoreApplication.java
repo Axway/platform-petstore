@@ -1,5 +1,8 @@
 package com.axway;
 
+import com.axway.auth.TokenAuthenticator;
+import com.axway.auth.UserAuthorizer;
+import com.axway.auth.User;
 import com.axway.client.pubsub.PubSubClient;
 import com.axway.db.PetDAO;
 import com.axway.db.PetMemoryDAO;
@@ -8,9 +11,13 @@ import com.axway.resources.EventResource;
 import com.axway.resources.IndexResource;
 import com.axway.resources.PetResource;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 
 /**
  * Main application class backing the Platform PetStore application.
@@ -61,6 +68,16 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
             configuration.getPubSubConfiguration().getKey(),
             configuration.getPubSubConfiguration().getSecret()
         );
+
+        // Authentication / Authorization
+        environment.jersey().register(new AuthDynamicFeature(
+                new OAuthCredentialAuthFilter.Builder<User>()
+                        .setAuthenticator(new TokenAuthenticator())
+                        .setAuthorizer(new UserAuthorizer())
+                        .setPrefix("Bearer")
+                        .buildAuthFilter()));
+        environment.jersey().register(RolesAllowedDynamicFeature.class);
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
 
         PetDAO petDAO = new PetMemoryDAO();
 

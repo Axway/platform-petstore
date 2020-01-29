@@ -8,3 +8,12 @@ logging:
   level: "INFO"
   loggers:
     com.axway: "DEBUG"
+# tag::axway-id
+keycloak:
+  realm: Broker
+  auth-server-url: https://login-preprod.axway.com/auth
+  ssl-required: none
+  resource: pko-2020
+  credentials:
+    secret: 05e9a954-2786-4080-9040-1f0430bf83c6
+# end::axway-id

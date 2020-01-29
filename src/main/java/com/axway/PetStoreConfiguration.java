@@ -2,6 +2,10 @@ package com.axway;
 
 import com.axway.client.platform.PlatformConfiguration;
 import com.axway.client.pubsub.PubSubConfiguration;
+// tag::axway-id
+import com.axway.keycloak.KeycloakConfiguration;
+// end::axway-id
+
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -61,4 +65,32 @@ public class PetStoreConfiguration extends Configuration {
     public void setPubSubConfiguration(PubSubConfiguration configuration) {
         this.pubsub = configuration;
     }
+
+    // tag::axway-id
+    /**
+     * The internal Keycloak configuration instance.
+     */
+    private KeycloakConfiguration keycloak = new KeycloakConfiguration();
+
+    /**
+     * JSON getter for the Keycloak configuration.
+     *
+     * @return a {@link KeycloakConfiguration} instance.
+     */
+    @JsonProperty("keycloak")
+    public KeycloakConfiguration getKeycloakConfiguration() {
+        return this.keycloak;
+    }
+
+    /**
+     * JSON setter for the Keycloak configuration.
+     *
+     * @param configuration
+     *      the {@link KeycloakConfiguration} for PubSub connectivity.
+     */
+    @JsonProperty("keycloak")
+    public void setKeycloakConfiguration(KeycloakConfiguration configuration) {
+        this.keycloak = configuration;
+    }
+    // end::axway-id
 }

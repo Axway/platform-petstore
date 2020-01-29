@@ -8,6 +8,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+// tag::axway-id
+import javax.annotation.security.RolesAllowed;
+// end::axway-id
+
 /**
  * Rendering resource for the single page app in browser.
  */
@@ -35,6 +39,9 @@ public class IndexResource {
      *
      * @return the internal {@link IndexView} instance.
      */
+    // tag::axway-id
+    @RolesAllowed("axway_employee")
+    // end::axway-id
     @GET
     public IndexView get() {
         return this.index;

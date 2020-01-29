@@ -7,6 +7,12 @@ import com.axway.health.PetStoreHealthCheck;
 import com.axway.resources.EventResource;
 import com.axway.resources.IndexResource;
 import com.axway.resources.PetResource;
+// tag::axway-id
+import com.axway.keycloak.KeycloakAuthFilter;
+import com.axway.keycloak.KeycloakBundle;
+import com.axway.keycloak.KeycloakConfiguration;
+import com.axway.keycloak.User;
+// end::axway-id
 import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -43,6 +49,14 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
     @Override
     public void initialize(Bootstrap<PetStoreConfiguration> bootstrap) {
         bootstrap.addBundle(new ViewBundle<>());
+        // tag::axway-id
+        bootstrap.addBundle(new KeycloakBundle<PetStoreConfiguration>() {
+            @Override
+            protected KeycloakConfiguration getKeycloakConfiguration(PetStoreConfiguration configuration) {
+                return configuration.getKeycloakConfiguration();
+            }
+        });
+        // end::axway-id
     }
 
     /**

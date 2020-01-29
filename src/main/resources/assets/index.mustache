@@ -2,221 +2,225 @@
 <html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="shortcut icon" href="https://www.axway.com/themes/custom/axway/favicon.ico" type="image/vnd.microsoft.icon">
-  <title>Pet Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="shortcut icon" href="https://www.axway.com/themes/custom/axway/favicon.ico" type="image/vnd.microsoft.icon">
+    <title>Pet Store</title>
 
-  <!-- CSS -->
-  <link class="platform-theme theme-light" rel="stylesheet" type="text/css"
-    href="https://d3cd0f9bgii318.cloudfront.net/current/css/style.css" media="">
-  <style>
-    body {
-      padding-top: 49px;
-    }
+    <!-- CSS -->
+    <link class="platform-theme theme-light" rel="stylesheet" type="text/css"
+          href="https://d3cd0f9bgii318.cloudfront.net/current/css/style.css" media="">
+    <style>
+		body {
+			padding-top: 49px;
+		}
 
-    .pet-grid {
-      max-height: 14em;
-      max-width: 100%;
-    }
+		.pet-grid {
+			max-height: 14em;
+			max-width: 100%;
+		}
 
-    .pet-del {
-      cursor: pointer;
-      color: gray
-    }
-  </style>
+		.pet-del {
+			cursor: pointer;
+			color: gray
+		}
+	</style>
 
-  <!-- JS -->
-  <script src="https://{{ platformHostname }}/unified-nav.js?login=1&signin=0&data=1&feed=0&analytics=0"></script>
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-  <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+    <!-- JS -->
+    <script src="https://{{ platformHostname }}/unified-nav.js?login=1&signin=0&data=1&feed=0&analytics=0"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 </head>
 
 <body>
-  <!-- banner -->
-  <div class="bg-varicose-vein txt-white">
-    <div class="container pt-45 pb-4 text-center">
-      <div class="display-4">Pet Store</div>
-      <p>
-        <span id="app-user-info"></span>
-      </p>
+    <!-- banner -->
+    <div class="bg-varicose-vein txt-white">
+        <div class="container pt-45 pb-4 text-center">
+            <div class="display-4">Pet Store</div>
+            <p>
+                <span id="app-user-info"></span>
+            </p>
+        </div>
     </div>
-  </div>
-  <!-- buttons -->
-  <div class="pb-0 pt-25 pr-25 text-right">
-    <button class="btn btn-primary" data-toggle="modal" data-target="#add-pet-modal">
-      Add Pet
-    </button>
-  </div>
-  <!-- table -->
-  <div class="container-fluid pt-25 pb-45 pr-45 pl-45">
-    <div id="pet-modal"></div>
+    <!-- buttons -->
+    <div class="pb-0 pt-25 pr-25 text-right">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#add-pet-modal">
+            Add Pet
+        </button>
+    </div>
+    <!-- table -->
+    <div class="container-fluid pt-25 pb-45 pr-45 pl-45">
+        <div id="pet-modal"></div>
 
-    <!-- pet grid -->
-    <div id="pet-tiles" class="row">
-  </div>
+        <!-- pet grid -->
+        <div id="pet-tiles" class="row"></div>
+    </div>
 </body>
 
 <script>
-  // react components
-  class UserInfo extends React.Component {
-    render() {
-      return React.createElement('span', null, null, `You are logged as ${this.props.firstname} ${this.props.lastname}, ${this.props.role} in ${this.props.org}`);
-    }
-  }
+	// react components
+	class UserInfo extends React.Component {
+		render() {
+			return React.createElement('span', null, null, `You are logged as ${this.props.firstname} ${this.props.lastname}, ${this.props.role} in ${this.props.org}`);
+		}
+	}
 
-  class PetModal extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = {
-        petName: '',
-        petType: '',
-        petImage: ''
-      };
+	class PetModal extends React.Component {
+		constructor(props) {
+			super(props);
+			this.state = {
+				petName: '',
+				petType: '',
+				petImage: ''
+			};
 
-      this.handleChange = this.handleChange.bind(this);
-    }
+			this.handleChange = this.handleChange.bind(this);
+		}
 
-    handleChange(event) {
-      const target = event.target;
-      const value = target.value;
-      const name = target.name;
+		handleChange(event) {
+			const target = event.target;
+			const value = target.value;
+			const name = target.name;
 
-      this.setState({
-        [name]: value
-      });
-    }
+			this.setState({
+				[name]: value
+			});
+		}
 
-    render() {
-      var element =
-        React.createElement('div', { id: 'add-pet-modal', className: 'modal fade', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'add-pet-label', 'aria-hidden': 'true' },
-          React.createElement('div', { className: 'modal-dialog', role: 'document' },
-            React.createElement('div', { className: 'modal-content' },
-              React.createElement('div', { className: 'modal-header' },
-                React.createElement('h5', { id: 'add-pet-label', className: 'modal-title' }, 'Add Pet'),
-                React.createElement('button', { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close'},
-                  React.createElement('span', { 'aria-hidden': 'true'}, '×'))),
-              React.createElement('div', { className: 'modal-body' },
-                React.createElement('form', { id: 'form-pet-add' },
-                  React.createElement('div', { className: 'form-group '},
-                    React.createElement('label', { htmlFor: 'add-pet-name' }, 'Pet Name'),
-                    React.createElement('input', { id: 'add-pet-name', type: 'text', className: 'form-control', name: "petName", value: this.state.petName, onChange: this.handleChange })),
-                  React.createElement('div', { className: 'form-group'},
-                    React.createElement('label', { className: 'add-pet-type' }, 'Pet Type'),
-                    React.createElement('input', { id: 'add-pet-type', type: 'text', className: 'form-control', name: "petType", value: this.state.petType, onChange: this.handleChange })),
-                  React.createElement('div', { className: 'form-group' },
-                    React.createElement('label', { htmlFor: 'add-pet-image' }, 'Pet Image'),
-                    React.createElement('input', { id: 'add-pet-image', type: 'text', className: 'form-control', name: "petImage", value: this.state.petImage, onChange: this.handleChange }),
-                    React.createElement('small', { className: 'form-text text-muted'})))),
-              React.createElement('div', { className: 'modal-footer' },
-                React.createElement('button', { type: 'button', className: 'btn btn-secondary', 'data-dismiss': 'modal' }, 'Close'),
-                React.createElement('button', { type: 'button', className: 'btn btn-primary', onClick: () => this.create() }, 'Submit')))));
+		render() {
+			var element =
+				React.createElement('div', { id: 'add-pet-modal', className: 'modal fade', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'add-pet-label', 'aria-hidden': 'true' },
+					React.createElement('div', { className: 'modal-dialog', role: 'document' },
+						React.createElement('div', { className: 'modal-content' },
+							React.createElement('div', { className: 'modal-header' },
+								React.createElement('h5', { id: 'add-pet-label', className: 'modal-title' }, 'Add Pet'),
+								React.createElement('button', { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close'},
+									React.createElement('span', { 'aria-hidden': 'true'}, '×'))),
+							React.createElement('div', { className: 'modal-body' },
+								React.createElement('form', { id: 'form-pet-add' },
+									React.createElement('div', { className: 'form-group '},
+										React.createElement('label', { htmlFor: 'add-pet-name' }, 'Pet Name'),
+										React.createElement('input', { id: 'add-pet-name', type: 'text', className: 'form-control', name: "petName", value: this.state.petName, onChange: this.handleChange })),
+									React.createElement('div', { className: 'form-group'},
+										React.createElement('label', { className: 'add-pet-type' }, 'Pet Type'),
+										React.createElement('input', { id: 'add-pet-type', type: 'text', className: 'form-control', name: "petType", value: this.state.petType, onChange: this.handleChange })),
+									React.createElement('div', { className: 'form-group' },
+										React.createElement('label', { htmlFor: 'add-pet-image' }, 'Pet Image'),
+										React.createElement('input', { id: 'add-pet-image', type: 'text', className: 'form-control', name: "petImage", value: this.state.petImage, onChange: this.handleChange }),
+										React.createElement('small', { className: 'form-text text-muted'})))),
+							React.createElement('div', { className: 'modal-footer' },
+								React.createElement('button', { type: 'button', className: 'btn btn-secondary', 'data-dismiss': 'modal' }, 'Close'),
+								React.createElement('button', { type: 'button', className: 'btn btn-primary', onClick: () => this.create() }, 'Submit')))));
 
-      return element;
-    }
+			return element;
+		}
 
-    create() {
-      var data = {
-        name: this.state.petName,
-        tag: this.state.petType,
-        photo: this.state.petImage
-      };
+		create() {
+			var data = {
+				name: this.state.petName,
+				tag: this.state.petType,
+				photo: this.state.petImage
+			};
 
-      var request = new XMLHttpRequest();
-      request.open('POST', '/api/v1/pet', true);
-      request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-      request.send(JSON.stringify(data));
+			var request = new XMLHttpRequest();
+			request.open('POST', '/api/v1/pet', true);
+			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			request.send(JSON.stringify(data));
 
-      $('#add-pet-modal').modal('hide');
-    }
-  }
+			$('#add-pet-modal').modal('hide');
+		}
+	}
 
-  class PetGrid extends React.Component {
-    constructor(props) {
-      super(props);
-      this.state = { pets: [] };
-    }
+	class PetGrid extends React.Component {
+		ws = new WebSocket('ws://' + location.host + '/ws');
 
-    componentDidMount() {
-      this.timerID = setInterval(() => this.tick(), 5000);
+		constructor(props) {
+			super(props);
+			this.state = { pets: [] };
+		}
 
-      this.tick();
-    }
+		componentDidMount() {
+			this.tick();
+			this.ws.onmessage = (evt) => {
+				if (evt.data === 'RELOAD') {
+					this.tick();
+				}
+			}
+		}
 
-    componentWillUnmount() {
-      clearInterval(this.timerID);
-    }
+		tick() {
+			var self = this;
+			var request = new XMLHttpRequest();
+			request.addEventListener("load", function () {
+				self.setState({ pets: JSON.parse(this.responseText) });
+			});
+			request.open('GET', '/api/v1/pet');
+			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			request.send();
+		}
 
-    tick() {
-      var self = this;
-      var request = new XMLHttpRequest();
-      request.addEventListener("load", function () {
-        self.setState({ pets: JSON.parse(this.responseText) });
-      });
-      request.open('GET', '/api/v1/pet');
-      request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-      request.send();
-    }
+		render() {
+			var children = [];
+			var canDelete = 'd-none pt-1 px-2 text-nowrap align-middle pet-del';
 
-    render() {
-      var children = [];
-      var canDelete = 'd-none pt-1 px-2 text-nowrap align-middle pet-del';
+			if (Appc.loggedIn()) {
+				var session = Appc.data('session');
 
-      if (Appc.loggedIn()) {
-        var session = Appc.data('session');
+				if (session.role === 'administrator') {
+					canDelete = 'd-inline-block pt-1 px-2 text-nowrap align-middle pet-del';
+				}
+			}
 
-        if (session.role === 'administrator') {
-          canDelete = 'd-inline-block pt-1 px-2 text-nowrap align-middle pet-del';
-        }
-      }
+			this.state.pets.forEach(pet => {
+				var element =
+					React.createElement('div', { key: pet.id, className: 'col-xl-3 col-lg-4 col-md-6 col-sm-12' },
+						React.createElement('div', { className: 'landing-tile text-center my-25' },
+							React.createElement('div', { className: 'px-25 pt-3' },
+								React.createElement('img', { className: 'pet-grid', src: pet.photo })),
+							React.createElement('div', { className: 'landing-actions bg-feather p-2 pt-1' },
+								React.createElement('span', { className: 'd-inline-block pt-1 px-2 text-nowrap align-middle font-weight-bold' }, pet.name),
+								React.createElement('span', { className: canDelete, onClick: () => this.delete(pet.id) }, 'Delete'))));
 
-      this.state.pets.forEach(pet => {
-        var element =
-        React.createElement('div', { key: pet.id, className: 'col-xl-3 col-lg-4 col-md-6 col-sm-12' },
-          React.createElement('div', { className: 'landing-tile text-center my-25' },
-            React.createElement('div', { className: 'px-25 pt-3' },
-              React.createElement('img', { className: 'pet-grid', src: pet.photo })),
-            React.createElement('div', { className: 'landing-actions bg-feather p-2 pt-1' },
-              React.createElement('span', { className: 'd-inline-block pt-1 px-2 text-nowrap align-middle font-weight-bold' }, pet.name),
-              React.createElement('span', { className: canDelete, onClick: () => this.delete(pet.id) }, 'Delete'))));
+				children.push(element);
+			});
 
-        children.push(element);
-      });
+			return children;
+		}
 
-      return children;
-    }
+		delete(id) {
+			var request = new XMLHttpRequest();
+			request.open('DELETE', '/api/v1/pet/' + id);
+			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			request.send();
+		}
+	}
 
-    delete(id) {
-      var self = this;
-      var request = new XMLHttpRequest();
-      request.addEventListener("load", function () {
-        self.tick();
-      });
-      request.open('DELETE', '/api/v1/pet/' + id);
-      request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-      request.send();
-    }
-  }
+	ReactDOM.render(React.createElement(PetModal, {}, null), document.getElementById('pet-modal'));
+	ReactDOM.render(React.createElement(PetGrid, {}, null), document.getElementById('pet-tiles'));
 
-  ReactDOM.render(React.createElement(PetModal, {}, null), document.getElementById('pet-modal'));
-  ReactDOM.render(React.createElement(PetGrid, {}, null), document.getElementById('pet-tiles'));
+	// set unified nav title
+	Appc.afterHeaderRender(function () {
+		Appc.setSitename('Pet Store');
+	});
 
-  // set unified nav title
-  Appc.afterHeaderRender(function () {
-    Appc.setSitename('Pet Store');
-  });
+	// unified nav api
+	if (Appc.loggedIn()) {
+		var user = Appc.data('user');
+		var org = Appc.data('org');
+		var session = Appc.data('session');
 
-  // unified nav api
-  if (Appc.loggedIn()) {
-    var user = Appc.data('user');
-    var org = Appc.data('org');
-    var session = Appc.data('session');
+		var infoElement = React.createElement(UserInfo, {
+			firstname: user.firstname,
+			lastname: user.lastname,
+			role: session.role,
+			org: org.name
+		});
 
-    ReactDOM.render(React.createElement(UserInfo, { firstname: user.firstname, lastname: user.lastname, role: session.role, org: org.name }), document.getElementById('app-user-info'));
-  }
+		ReactDOM.render(infoElement, document.getElementById('app-user-info'));
+	}
 </script>
 
 </html>

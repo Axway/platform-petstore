@@ -2,8 +2,8 @@ package com.axway;
 
 import com.axway.client.mbaas.MbaasClient;
 import com.axway.client.pubsub.PubSubClient;
+import com.axway.client.socket.WebSocketClient;
 import com.axway.db.PetDAO;
-import com.axway.db.PetMbaasDAO;
 import com.axway.db.PetMemoryDAO;
 import com.axway.health.PetStoreHealthCheck;
 import com.axway.resources.EventResource;
@@ -13,6 +13,7 @@ import io.dropwizard.Application;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import io.dropwizard.websockets.WebsocketBundle;
 
 import java.io.IOException;
 
@@ -47,6 +48,7 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
     @Override
     public void initialize(Bootstrap<PetStoreConfiguration> bootstrap) {
         bootstrap.addBundle(new ViewBundle<>());
+        bootstrap.addBundle(new WebsocketBundle(WebSocketClient.class));
     }
 
     /**

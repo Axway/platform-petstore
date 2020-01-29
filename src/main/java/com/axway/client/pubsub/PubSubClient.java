@@ -8,10 +8,13 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -26,6 +29,11 @@ import java.util.Objects;
 public class PubSubClient {
 
     /**
+     * Static logging instance for all log messages emitted by this class.
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().getClass());
+
+    /**
      * Media type used for all JSON requests to the server.
      */
     private static final MediaType JSON
@@ -34,8 +42,7 @@ public class PubSubClient {
     /**
      * Singleton JSON mapper to use when translating JSON between containers.
      */
-    private static final ObjectMapper MAPPER
-            = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     /**
      * The remote PubSub hostname to connect to (domain only).
@@ -94,15 +101,12 @@ public class PubSubClient {
 
         Response response = this.client.newCall(request).execute();
 
-        if (response.code() != 200) {
-            try (ResponseBody responseBody = response.body()) {
-                System.err.println(responseBody.string());
-            }
-            throw new IOException("Unable to publish event to PubSub");
+        try (ResponseBody responseBody = response.body()) {
+            LOGGER.info("Received response from PubSub: {}", responseBody.string());
         }
 
-        try (ResponseBody responseBody = response.body()) {
-            System.out.println(responseBody.string());
+        if (response.code() != 200) {
+            throw new IOException("Unable to publish event to PubSub");
         }
     }
 

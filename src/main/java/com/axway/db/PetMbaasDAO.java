@@ -1,26 +1,29 @@
 package com.axway.db;
 
+import com.axway.api.Event;
 import com.axway.api.Pet;
 import com.axway.client.mbaas.MbaasClient;
+import com.axway.client.pubsub.PubSubClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
 import com.squareup.okhttp.ResponseBody;
 import io.dropwizard.jackson.Jackson;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static com.axway.api.Event.PET_CREATE_EVENT;
+import static com.axway.api.Event.PET_REMOVE_EVENT;
 
 /**
  * MBaaS based storage class for Pet instances.
@@ -29,11 +32,6 @@ import java.util.stream.Stream;
  * so that it can be used from multiple instances of the application.
  */
 public class PetMbaasDAO implements PetDAO {
-
-    /**
-     * Static logging instance for all log messages emitted by this class.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().getClass());
 
     /**
      * Singleton JSON mapper to use when translating JSON between containers.
@@ -46,13 +44,21 @@ public class PetMbaasDAO implements PetDAO {
     private final MbaasClient client;
 
     /**
+     * The PubSub client used to broadcast events on creation.
+     */
+    private final PubSubClient pubsub;
+
+    /**
      * Initializes a new DAO with an MBaaS client.
      *
      * @param client
      *      the client used for remote connections.
+     * @param pubsub
+     *      the client used for PubSub event emission.
      */
-    public PetMbaasDAO(@Nonnull MbaasClient client) {
+    public PetMbaasDAO(@Nonnull MbaasClient client, @Nonnull PubSubClient pubsub) {
         this.client = Objects.requireNonNull(client);
+        this.pubsub = Objects.requireNonNull(pubsub);
     }
 
     /**
@@ -75,8 +81,23 @@ public class PetMbaasDAO implements PetDAO {
         }
 
         try (ResponseBody body = response.body()) {
-            LOGGER.info("Received MBaaS response: {}", body.string());
+            try (InputStream is = body.byteStream()) {
+                pet = new Pet(
+                    MAPPER.readTree(is).path("response").path("pets").path(0).path("id").asText(),
+                    pet.getName(),
+                    pet.getPhoto(),
+                    pet.getTag()
+                );
+            }
         }
+
+        // The following block will emit a PubSub creation event, containing the Pet
+        // object itself in the data payload. This allows people to respond to any
+        // new pets being created.
+        //
+        // ObjectNode data = MAPPER.convertValue(pet, ObjectNode.class);
+        // Event event = new Event(PET_CREATE_EVENT, data);
+        // this.pubsub.send(event);
     }
 
     /**
@@ -148,8 +169,13 @@ public class PetMbaasDAO implements PetDAO {
             throw new IOException("Unable to remove pet from MBaaS");
         }
 
-        try (ResponseBody body = response.body()) {
-            LOGGER.info("Received MBaaS response: {}", body.string());
-        }
+        // The following block will emit a PubSub removal event, containing the Pet
+        // identifier. This allows people to respond to any old pets being removed.
+        //
+        // ObjectNode data = MAPPER.createObjectNode();
+        // data.put("id", id);
+        //
+        // Event event = new Event(PET_REMOVE_EVENT, data);
+        // this.pubsub.send(event);
     }
 }

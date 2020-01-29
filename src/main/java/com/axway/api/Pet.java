@@ -38,7 +38,6 @@ public class Pet {
     /**
      * Private constructor used for Jackson deserialization.
      */
-    @SuppressWarnings("unused")
     private Pet() {
         this.id = Optional.empty();
     }

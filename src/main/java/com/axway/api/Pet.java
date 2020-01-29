@@ -1,5 +1,6 @@
 package com.axway.api;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.annotation.Nonnull;
@@ -11,6 +12,7 @@ import java.util.Optional;
 /**
  * Basic model instance representing a Pet.
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class Pet {
 
     /**
@@ -36,7 +38,9 @@ public class Pet {
     /**
      * Private constructor used for Jackson deserialization.
      */
-    private Pet() { }
+    private Pet() {
+        this.id = Optional.empty();
+    }
 
     /**
      * Constructs a pet instance.

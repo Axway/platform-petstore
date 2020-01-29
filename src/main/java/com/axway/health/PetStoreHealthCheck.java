@@ -10,8 +10,6 @@ public class PetStoreHealthCheck extends HealthCheck {
     /**
      * Checks whether the service is healthy.
      *
-     * TODO: Implement third party service checks.
-     *
      * @return a {@link Result} determining service health.
      */
     @Override

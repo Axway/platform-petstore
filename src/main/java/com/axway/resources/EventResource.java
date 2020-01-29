@@ -1,6 +1,7 @@
 package com.axway.resources;
 
 import com.axway.api.Event;
+import com.axway.client.socket.WebSocketClient;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -30,6 +31,8 @@ public class EventResource {
         // and so we can notify any attached browsers to reload their UI to display the latest
         // set of pets. This allows the UI to be much more "reactive", and avoids having to poll.
         //
-        // TODO: Implement an example of notifying the UI of changes sent by PubSub
+        // To enable this behaviour, you can emit a reload message to connected UIs:
+        //
+        // WebSocketClient.send("RELOAD");
     }
 }

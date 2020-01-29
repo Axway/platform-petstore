@@ -86,7 +86,7 @@ public class PetMbaasDAO implements PetDAO {
                     MAPPER.readTree(is).path("response").path("pets").path(0).path("id").asText(),
                     pet.getName(),
                     pet.getPhoto(),
-                    pet.getTag()
+                    pet.getType()
                 );
             }
         }

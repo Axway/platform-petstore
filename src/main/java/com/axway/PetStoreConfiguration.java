@@ -5,7 +5,6 @@ import com.axway.client.pubsub.PubSubConfiguration;
 // tag::axway-id
 import com.axway.keycloak.KeycloakConfiguration;
 // end::axway-id
-
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 

@@ -61,15 +61,16 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
      */
     @Override
     public void run(PetStoreConfiguration configuration, Environment environment) throws IOException {
-        // An MBaaS connected client used for calling the MBaaS APIs
-        MbaasClient mbaas = new MbaasClient(configuration.getMbaasConfiguration());
+
 
         // A PubSub connected client used for publishing events to PubSub
-        PubSubClient pubsub = new PubSubClient(
-            configuration.getPubSubConfiguration().getHostname(),
-            configuration.getPubSubConfiguration().getKey(),
-            configuration.getPubSubConfiguration().getSecret()
-        );
+        // start:pubsub
+        // PubSubClient pubsub = new PubSubClient(
+        //    configuration.getPubSubConfiguration().getHostname(),
+        //    configuration.getPubSubConfiguration().getKey(),
+        //    configuration.getPubSubConfiguration().getSecret()
+        // );
+        // end:pubsub
 
         // Our Pet storage instance
         PetDAO petDAO = null;
@@ -78,7 +79,12 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         // the following lines to construct a PetDAO implementation.
         //
         petDAO = new PetMemoryDAO();
+
+        // An MBaaS connected client used for calling the MBaaS APIs
+        // start:mbaas
+        // MbaasClient mbaas = new MbaasClient(configuration.getMbaasConfiguration());
         // petDAO = new PetMbaasDAO(mbaas, pubsub);
+        // end:mbaas
 
         // Register a basic health check for our service using the Dropwizard APIs
         environment.healthChecks().register("pet-store", new PetStoreHealthCheck());

@@ -1,5 +1,9 @@
 package com.axway;
 
+
+import com.axway.auth.TokenAuthenticator;
+import com.axway.auth.UserAuthorizer;
+import com.axway.auth.User;
 import com.axway.client.mbaas.MbaasClient;
 import com.axway.client.pubsub.PubSubClient;
 import com.axway.client.socket.WebSocketClient;
@@ -10,9 +14,13 @@ import com.axway.resources.EventResource;
 import com.axway.resources.IndexResource;
 import com.axway.resources.PetResource;
 import io.dropwizard.Application;
+import io.dropwizard.auth.AuthDynamicFeature;
+import io.dropwizard.auth.AuthValueFactoryProvider;
+import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
+import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import io.dropwizard.websockets.WebsocketBundle;
 
 import java.io.IOException;
@@ -80,6 +88,17 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         //
         petDAO = new PetMemoryDAO();
 
+        // Authentication / Authorization
+        environment.jersey().register(new AuthDynamicFeature(
+                new OAuthCredentialAuthFilter.Builder<User>()
+                        .setAuthenticator(new TokenAuthenticator())
+                        .setAuthorizer(new UserAuthorizer())
+                        .setPrefix("Bearer")
+                        .buildAuthFilter()));
+        environment.jersey().register(RolesAllowedDynamicFeature.class);
+        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
+
+        PetDAO petDAO = new PetMemoryDAO();
         // An MBaaS connected client used for calling the MBaaS APIs
         // start:mbaas
         // MbaasClient mbaas = new MbaasClient(configuration.getMbaasConfiguration());

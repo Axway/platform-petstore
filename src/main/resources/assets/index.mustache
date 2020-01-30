@@ -130,6 +130,9 @@
 			};
 
 			var request = new XMLHttpRequest();
+			request.addEventListener("load", () => {
+				this.tick();
+			});
 			request.open('POST', '/api/v1/pet', true);
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send(JSON.stringify(data));
@@ -197,6 +200,9 @@
 
 		delete(id) {
 			var request = new XMLHttpRequest();
+			request.addEventListener("load", () => {
+				this.tick();
+			});
 			request.open('DELETE', '/api/v1/pet/' + id);
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send();

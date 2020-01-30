@@ -22,8 +22,9 @@ import java.util.stream.Collectors;
 @Path("/api/v1/pet")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-// UNCOMMENT TO ENABLE AUTHORIZATION
+// start:central
 // @RolesAllowed("ADMIN")
+// end:central
 public class PetResource {
 
     /**
@@ -43,7 +44,9 @@ public class PetResource {
 
     /**
      * Retrieves all {@link Pet} instances.
-     * 
+     *
+     * @param user
+     *      the authenticated {@link User} principal.
      * @param limit
      *      a parameter used to limit the amount of retrieved pets.
      * @return
@@ -61,6 +64,8 @@ public class PetResource {
     /**
      * Retrieves a {@link Pet} by an identifier.
      *
+     * @param user
+     *      the authenticated {@link User} principal.
      * @param petId
      *      the identifier of the pet to retrieve.
      * @return
@@ -75,6 +80,8 @@ public class PetResource {
     /**
      * Removes a {@link Pet} by an identifier.
      *
+     * @param user
+     *      the authenticated {@link User} principal.
      * @param petId
      *      the identifier of the pet to remove.
      */
@@ -87,6 +94,8 @@ public class PetResource {
     /**
      * Creates a new {@link Pet} instance.
      *
+     * @param user
+     *      the authenticated {@link User} principal.
      * @param pet
      *      the {@link Pet} instance to store.
      */

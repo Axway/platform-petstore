@@ -53,7 +53,7 @@ public class PetResource {
      *      a collection of {@link Pet} instances.
      */
     @GET
-    public Collection<Pet> find(@Auth Optional<User> user, @QueryParam("limit") Optio@Auth Optional<User> user, nal<Integer> limit) throws IOException {
+    public Collection<Pet> find(@Auth Optional<User> user, @QueryParam("limit") Optional<Integer> limit) throws IOException {
         return this.pets.get()
                 .filter(pet -> pet.getId().isPresent())
                 .sorted(Comparator.comparing(left -> left.getId().get()))

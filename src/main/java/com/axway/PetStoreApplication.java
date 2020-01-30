@@ -88,6 +88,15 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         //
         petDAO = new PetMemoryDAO();
 
+        // An MBaaS connected client used for calling the MBaaS APIs
+        // start:mbaas
+        // MbaasClient mbaas = new MbaasClient(configuration.getMbaasConfiguration());
+        // petDAO = new PetMbaasDAO(mbaas, pubsub);
+        // end:mbaas
+
+        // Register a basic health check for our service using the Dropwizard APIs
+        environment.healthChecks().register("pet-store", new PetStoreHealthCheck());
+
         // Authentication / Authorization
         environment.jersey().register(new AuthDynamicFeature(
                 new OAuthCredentialAuthFilter.Builder<User>()
@@ -97,16 +106,6 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
                         .buildAuthFilter()));
         environment.jersey().register(RolesAllowedDynamicFeature.class);
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
-
-        PetDAO petDAO = new PetMemoryDAO();
-        // An MBaaS connected client used for calling the MBaaS APIs
-        // start:mbaas
-        // MbaasClient mbaas = new MbaasClient(configuration.getMbaasConfiguration());
-        // petDAO = new PetMbaasDAO(mbaas, pubsub);
-        // end:mbaas
-
-        // Register a basic health check for our service using the Dropwizard APIs
-        environment.healthChecks().register("pet-store", new PetStoreHealthCheck());
 
         // Attach all of our resource instances against the Jersey servlet
         environment.jersey().register(new EventResource());

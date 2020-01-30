@@ -9,7 +9,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 // tag::axway-id
+import io.dropwizard.auth.Auth;
 import javax.annotation.security.RolesAllowed;
+import com.axway.keycloak.User;
 // end::axway-id
 
 /**
@@ -43,7 +45,14 @@ public class IndexResource {
     @RolesAllowed("axway_employee")
     // end::axway-id
     @GET
-    public IndexView get() {
+    public IndexView get(
+            // tag::axway-id
+            @Auth User auth
+            // end::axway-id
+    ) {
+        // tag::axway-id
+        this.index.setUser(auth);
+        // end::axway-id
         return this.index;
     }
 
@@ -76,5 +85,29 @@ public class IndexResource {
         public String getPlatformHostname() {
             return this.configuration.getPlatformConfiguration().getHostname();
         }
+
+        // tag::axway-id
+        /**
+         * Current user
+         */
+        private User user;
+
+        /**
+         * Set the current user
+         * @param user
+         */
+        public void setUser(User user) {
+            this.user = user;
+        }
+
+        /**
+         * Retrieves the current user
+         *
+         * @return
+         */
+        public User getUser() {
+            return this.user;
+        }
+        // end::axway-id
     }
 }

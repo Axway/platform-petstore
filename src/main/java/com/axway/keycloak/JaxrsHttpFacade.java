@@ -19,10 +19,6 @@ import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
 
-/**
- * @author <a href="mailto:mposolda@redhat.com">Marek Posolda</a>
- * @author <a href="mailto:alexander.schwartz@gmx.net">Alexander Schwartz</a> (adoption for Dropwizard)
- */
 public class JaxrsHttpFacade implements OIDCHttpFacade {
 
     private final ContainerRequestContext requestContext;

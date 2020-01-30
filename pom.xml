@@ -49,7 +49,7 @@
             <version>2.7.5</version>
         </dependency>
 
-        <!-- tag::axway-id[] -->
+        <!-- tag::axway-id -->
         <dependency>
             <groupId>io.dropwizard</groupId>
             <artifactId>dropwizard-auth</artifactId>
@@ -74,7 +74,7 @@
             <artifactId>bcprov-jdk16</artifactId>
             <version>1.46</version>
         </dependency>
-        <!-- end::axway-id[] -->
+        <!-- end::axway-id -->
     </dependencies>
 
     <build>

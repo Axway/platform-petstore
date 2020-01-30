@@ -20,29 +20,26 @@ import java.util.Locale;
 
 public abstract class KeycloakBundle<T> implements ConfiguredBundle<T> {
 
-    // tag::keycloak[]
-
     @Override
     @SuppressWarnings("checkstyle:emptyblock")
     public void run(T configuration, Environment environment) {
 
         /* setup the authenticator in front of the requests to allow for pre-auth integration */
-        // tag::authenticator[]
         KeycloakJettyAuthenticator keycloak = new KeycloakDropwizardAuthenticator();
         keycloak.setAdapterConfig(getKeycloakConfiguration(configuration));
         ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
         environment.getApplicationContext().setSecurityHandler(securityHandler);
         environment.getApplicationContext().getSecurityHandler().setAuthenticator(keycloak);
-        // end::authenticator[]
 
-        // tag::authfactory[]
         environment.jersey().register(new AuthDynamicFeature(
                 createAuthFactory(configuration)));
+
         // To use @RolesAllowed annotations
         environment.jersey().register(RolesAllowedDynamicFeature.class);
+
         // To use @Auth to inject a custom Principal type into your resource
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(getUserClass()));
-        // end::authfactory[]
+
 
         if (getKeycloakConfiguration(configuration).isBearerOnly()) {
             // no session needed

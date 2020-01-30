@@ -95,9 +95,11 @@ public class PetMbaasDAO implements PetDAO {
         // object itself in the data payload. This allows people to respond to any
         // new pets being created.
         //
+        // start:pubsub
         // ObjectNode data = MAPPER.convertValue(pet, ObjectNode.class);
         // Event event = new Event(PET_CREATE_EVENT, data);
         // this.pubsub.send(event);
+        // end:pubsub
     }
 
     /**
@@ -171,11 +173,13 @@ public class PetMbaasDAO implements PetDAO {
 
         // The following block will emit a PubSub removal event, containing the Pet
         // identifier. This allows people to respond to any old pets being removed.
-        //
+
+        // start:pubsub
         // ObjectNode data = MAPPER.createObjectNode();
         // data.put("id", id);
         //
         // Event event = new Event(PET_REMOVE_EVENT, data);
         // this.pubsub.send(event);
+        // end:pubsub
     }
 }

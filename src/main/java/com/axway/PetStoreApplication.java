@@ -1,9 +1,12 @@
 package com.axway;
 
+
 import com.axway.auth.TokenAuthenticator;
 import com.axway.auth.UserAuthorizer;
 import com.axway.auth.User;
+import com.axway.client.mbaas.MbaasClient;
 import com.axway.client.pubsub.PubSubClient;
+import com.axway.client.socket.WebSocketClient;
 import com.axway.db.PetDAO;
 import com.axway.db.PetMemoryDAO;
 import com.axway.health.PetStoreHealthCheck;
@@ -18,6 +21,9 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
+import io.dropwizard.websockets.WebsocketBundle;
+
+import java.io.IOException;
 
 /**
  * Main application class backing the Platform PetStore application.
@@ -50,6 +56,7 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
     @Override
     public void initialize(Bootstrap<PetStoreConfiguration> bootstrap) {
         bootstrap.addBundle(new ViewBundle<>());
+        bootstrap.addBundle(new WebsocketBundle(WebSocketClient.class));
     }
 
     /**
@@ -61,13 +68,25 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
      *      the Dropwizard {@link Environment} used to configure the backing service.
      */
     @Override
-    public void run(PetStoreConfiguration configuration, Environment environment) {
-        // TODO: Integrate PubSub capabilities
-        PubSubClient pubsub = new PubSubClient(
-            configuration.getPubSubConfiguration().getHostname(),
-            configuration.getPubSubConfiguration().getKey(),
-            configuration.getPubSubConfiguration().getSecret()
-        );
+    public void run(PetStoreConfiguration configuration, Environment environment) throws IOException {
+
+
+        // A PubSub connected client used for publishing events to PubSub
+        // start:pubsub
+        // PubSubClient pubsub = new PubSubClient(
+        //    configuration.getPubSubConfiguration().getHostname(),
+        //    configuration.getPubSubConfiguration().getKey(),
+        //    configuration.getPubSubConfiguration().getSecret()
+        // );
+        // end:pubsub
+
+        // Our Pet storage instance
+        PetDAO petDAO = null;
+
+        // Select the storage mechanism for this service by uncommenting one of
+        // the following lines to construct a PetDAO implementation.
+        //
+        petDAO = new PetMemoryDAO();
 
         // Authentication / Authorization
         environment.jersey().register(new AuthDynamicFeature(
@@ -80,9 +99,16 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
 
         PetDAO petDAO = new PetMemoryDAO();
+        // An MBaaS connected client used for calling the MBaaS APIs
+        // start:mbaas
+        // MbaasClient mbaas = new MbaasClient(configuration.getMbaasConfiguration());
+        // petDAO = new PetMbaasDAO(mbaas, pubsub);
+        // end:mbaas
 
+        // Register a basic health check for our service using the Dropwizard APIs
         environment.healthChecks().register("pet-store", new PetStoreHealthCheck());
 
+        // Attach all of our resource instances against the Jersey servlet
         environment.jersey().register(new EventResource());
         environment.jersey().register(new IndexResource(configuration));
         environment.jersey().register(new PetResource(petDAO));

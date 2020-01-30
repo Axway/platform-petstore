@@ -1,6 +1,7 @@
 package com.axway.resources;
 
 import com.axway.api.Event;
+import com.axway.client.socket.WebSocketClient;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -24,6 +25,14 @@ public class EventResource {
      */
     @POST
     public void receive(Event event) {
-        // TODO: do something with a received PubSub event
+        // This API will fire once an event has been received from the PubSub service.
+        //
+        // In our application, we can use this to know when a Pet has been added or removed,
+        // and so we can notify any attached browsers to reload their UI to display the latest
+        // set of pets. This allows the UI to be much more "reactive", and avoids having to poll.
+        //
+        // To enable this behaviour, you can emit a reload message to connected UIs:
+        //
+        // WebSocketClient.send("RELOAD");
     }
 }

@@ -39,7 +39,7 @@ public class PetMemoryDAO implements PetDAO {
                 UUID.randomUUID().toString(),
                 pet.getName(),
                 pet.getPhoto(),
-                pet.getTag()
+                pet.getType()
             );
         }
         this.pets.put(pet.getId().get(), pet);

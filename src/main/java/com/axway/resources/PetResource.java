@@ -29,7 +29,7 @@ public class PetResource {
 
     private final EntitlementsEnforcer entitlementsEnforcer;
 
-    /**
+  /**
 	 * Constructs a new resource with a storage instance.
 	 *
 	 * @param pets                 the storage instance used to store/fetch

@@ -74,7 +74,7 @@ public class PetStoreConfiguration extends Configuration {
 		this.entitlements = entitlements;
 	}
 
-  /**
+    /**
      * JSON getter for the Platform configuration.
      *
      * @return a {@link PlatformConfiguration} instance.

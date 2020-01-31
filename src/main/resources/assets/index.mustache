@@ -86,7 +86,7 @@
 
 			this.state = {
 				petName: '',
-				petType: 'Other',
+				petType: '',
 				petTypes: [ 'Other' ],
 				petImage: '',
 				errorMessage: false
@@ -134,6 +134,10 @@
 			});
 		}
 
+		getPetType() {
+			return this.state.petType || this.state.petTypes[0];
+		}
+
 		render() {
 			let options = [];
 			let errorClass = 'd-none';
@@ -167,7 +171,7 @@
 										React.createElement('input', { id: 'add-pet-name', type: 'text', className: 'form-control', name: "petName", value: this.state.petName, onChange: this.handleChange })),
 									React.createElement('div', { className: 'form-group'},
 										React.createElement('label', { className: 'add-pet-type' }, 'Pet Type'),
-										React.createElement('select', { id: 'add-pet-type', className: 'form-control', name: 'petType', value: this.state.petTypes[0], onChange: this.handleChange }, options)),
+										React.createElement('select', { id: 'add-pet-type', className: 'form-control', name: 'petType', value: getPetType(), onChange: this.handleChange }, options)),
 									React.createElement('div', { className: 'form-group' },
 										React.createElement('label', { htmlFor: 'add-pet-image' }, 'Pet Image'),
 										React.createElement('input', { id: 'add-pet-image', type: 'text', className: 'form-control', name: "petImage", value: this.state.petImage, onChange: this.handleChange }),
@@ -183,7 +187,7 @@
 			let self = this;
 			let data = {
 				name: this.state.petName,
-				type: this.state.petType,
+				type: getPetType(),
 				photo: this.state.petImage
 			};
 

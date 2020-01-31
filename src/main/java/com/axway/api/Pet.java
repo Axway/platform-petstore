@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.net.URL;
+import java.net.URI;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -33,7 +33,7 @@ public class Pet {
     /**
      * A link to a photo of the Pet.
      */
-    private URL photo;
+    private URI photo;
 
     /**
      * Private constructor used for Jackson deserialization.
@@ -54,7 +54,7 @@ public class Pet {
      * @param type
      *      a tag used to identify the photo type.
      */
-    public Pet(@Nullable String id, @Nonnull String name, @Nonnull URL photo, @Nonnull String type) {
+    public Pet(@Nullable String id, @Nonnull String name, @Nonnull URI photo, @Nonnull String type) {
         this.id = Optional.ofNullable(id);
         this.name = Objects.requireNonNull(name);
         this.photo = Objects.requireNonNull(photo);
@@ -84,10 +84,10 @@ public class Pet {
     /**
      * Retrieves the photo URL of the Pet.
      *
-     * @return a {@link URL} location of the pet photo.
+     * @return a {@link URI} location of the pet photo.
      */
     @JsonProperty
-    public URL getPhoto() {
+    public URI getPhoto() {
         return this.photo;
     }
 

@@ -1,7 +1,9 @@
 package com.axway.resources;
 
 import com.axway.api.Event;
-import com.axway.client.socket.WebSocketClient;
+// start:pubsub
+// import com.axway.client.socket.WebSocketClient;
+// end:pubsub
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;

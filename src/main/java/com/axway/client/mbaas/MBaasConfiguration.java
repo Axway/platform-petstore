@@ -45,7 +45,7 @@ public class MBaasConfiguration extends Configuration {
      *      the key to configure internally.
      */
     @JsonProperty("key")
-    public void setKey(String key) {
+    private void setKey(String key) {
         this.key = key;
     }
 
@@ -66,7 +66,7 @@ public class MBaasConfiguration extends Configuration {
      *      the username to configure internally.
      */
     @JsonProperty("username")
-    public void setUsername(String username) {
+    private void setUsername(String username) {
         this.username = username;
     }
 
@@ -87,7 +87,7 @@ public class MBaasConfiguration extends Configuration {
      *      the password to configure internally.
      */
     @JsonProperty("password")
-    public void setPassword(String password) {
+    private void setPassword(String password) {
         this.password = password;
     }
 
@@ -108,7 +108,7 @@ public class MBaasConfiguration extends Configuration {
      *      the hostname to configure internally.
      */
     @JsonProperty("hostname")
-    public void setHostname(String hostname) {
+    private void setHostname(String hostname) {
         this.hostname = hostname;
     }
 }

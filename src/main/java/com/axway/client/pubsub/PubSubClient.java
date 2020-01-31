@@ -7,14 +7,10 @@ import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
-import com.squareup.okhttp.ResponseBody;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
-import java.lang.invoke.MethodHandles;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
@@ -27,11 +23,6 @@ import java.util.Objects;
  * something better created for projects that ship to production :).
  */
 public class PubSubClient {
-
-    /**
-     * Static logging instance for all log messages emitted by this class.
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().getClass());
 
     /**
      * Media type used for all JSON requests to the server.
@@ -100,11 +91,6 @@ public class PubSubClient {
                 .build();
 
         Response response = this.client.newCall(request).execute();
-
-        try (ResponseBody responseBody = response.body()) {
-            LOGGER.info("Received response from PubSub: {}", responseBody.string());
-        }
-
         if (response.code() != 200) {
             throw new IOException("Unable to publish event to PubSub");
         }

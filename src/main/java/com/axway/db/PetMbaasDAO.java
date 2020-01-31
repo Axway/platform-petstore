@@ -1,12 +1,16 @@
 package com.axway.db;
 
-import com.axway.api.Event;
+// start:pubsub
+// import com.axway.api.Event;
+// end:pubsub
 import com.axway.api.Pet;
 import com.axway.client.mbaas.MbaasClient;
 import com.axway.client.pubsub.PubSubClient;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+// start:pubsub
+// import com.fasterxml.jackson.databind.node.ObjectNode;
+// end:pubsub
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
@@ -22,8 +26,10 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.axway.api.Event.PET_CREATE_EVENT;
-import static com.axway.api.Event.PET_REMOVE_EVENT;
+// start:pubsub
+// import static com.axway.api.Event.PET_CREATE_EVENT;
+// import static com.axway.api.Event.PET_REMOVE_EVENT;
+// end:pubsub
 
 /**
  * MBaaS based storage class for Pet instances.
@@ -91,10 +97,6 @@ public class PetMbaasDAO implements PetDAO {
             }
         }
 
-        // The following block will emit a PubSub creation event, containing the Pet
-        // object itself in the data payload. This allows people to respond to any
-        // new pets being created.
-        //
         // start:pubsub
         // ObjectNode data = MAPPER.convertValue(pet, ObjectNode.class);
         // Event event = new Event(PET_CREATE_EVENT, data);
@@ -171,9 +173,6 @@ public class PetMbaasDAO implements PetDAO {
             throw new IOException("Unable to remove pet from MBaaS");
         }
 
-        // The following block will emit a PubSub removal event, containing the Pet
-        // identifier. This allows people to respond to any old pets being removed.
-
         // start:pubsub
         // ObjectNode data = MAPPER.createObjectNode();
         // data.put("id", id);
@@ -181,5 +180,27 @@ public class PetMbaasDAO implements PetDAO {
         // Event event = new Event(PET_REMOVE_EVENT, data);
         // this.pubsub.send(event);
         // end:pubsub
+    }
+
+    /**
+     * Retrieve the total number of stored {@link Pet} instances.
+     *
+     * @return
+     *      a count of {@link Pet} instances in the store.
+     */
+    @Override
+    public long count() throws IOException {
+        return this.get().count();
+    }
+
+    /**
+     * Retrieve the number of stored {@link Pet} instances of a given type.
+     *
+     * @return
+     *      a count of {@link Pet} instances in the store.
+     */
+    @Override
+    public long count(String type) throws IOException {
+        return this.get().filter(pet -> pet.getType().equalsIgnoreCase(type)).count();
     }
 }

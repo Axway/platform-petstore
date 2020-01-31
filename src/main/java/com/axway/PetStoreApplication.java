@@ -1,12 +1,20 @@
 package com.axway;
 
-
-import com.axway.auth.TokenAuthenticator;
-import com.axway.auth.UserAuthorizer;
-import com.axway.auth.User;
-import com.axway.client.mbaas.MbaasClient;
-import com.axway.client.pubsub.PubSubClient;
+// start:entitlements
+// import com.axway.client.axwayid.AxwayIdClient;
+// import com.axway.client.entitlements.EntitlementsClient;
+// end:entitlements
+// start:pubsub
+// import com.axway.client.pubsub.PubSubClient;
+// end:pubsub
+// start:mbaas
+// import com.axway.client.mbaas.MbaasClient;
+// end:mbaas
 import com.axway.client.socket.WebSocketClient;
+// start:entitlements
+// import com.axway.core.entitlements.Entitlements;
+// import com.axway.core.entitlements.EntitlementsValidator;
+// end:entitlements
 import com.axway.db.PetDAO;
 import com.axway.db.PetMemoryDAO;
 import com.axway.health.PetStoreHealthCheck;
@@ -14,13 +22,9 @@ import com.axway.resources.EventResource;
 import com.axway.resources.IndexResource;
 import com.axway.resources.PetResource;
 import io.dropwizard.Application;
-import io.dropwizard.auth.AuthDynamicFeature;
-import io.dropwizard.auth.AuthValueFactoryProvider;
-import io.dropwizard.auth.oauth.OAuthCredentialAuthFilter;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
-import org.glassfish.jersey.server.filter.RolesAllowedDynamicFeature;
 import io.dropwizard.websockets.WebsocketBundle;
 
 import java.io.IOException;
@@ -69,8 +73,6 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
      */
     @Override
     public void run(PetStoreConfiguration configuration, Environment environment) throws IOException {
-
-
         // A PubSub connected client used for publishing events to PubSub
         // start:pubsub
         // PubSubClient pubsub = new PubSubClient(
@@ -80,13 +82,8 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         // );
         // end:pubsub
 
-        // Our Pet storage instance
-        PetDAO petDAO = null;
-
-        // Select the storage mechanism for this service by uncommenting one of
-        // the following lines to construct a PetDAO implementation.
-        //
-        petDAO = new PetMemoryDAO();
+        // Select the storage mechanism for this service
+        PetDAO petDAO = new PetMemoryDAO();
 
         // An MBaaS connected client used for calling the MBaaS APIs
         // start:mbaas
@@ -94,22 +91,22 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         // petDAO = new PetMbaasDAO(mbaas, pubsub);
         // end:mbaas
 
+        // An AxwayID client used to retrieve tokens for use when querying entitlements
+        // start:entitlements
+        // AxwayIdClient axwayId = new AxwayIdClient(configuration.getAxwayIdConfiguration());
+        // EntitlementsClient entitlements = new EntitlementsClient(axwayId, configuration.getEntitlementsConfiguration());
+        // end:entitlements
+
         // Register a basic health check for our service using the Dropwizard APIs
         environment.healthChecks().register("pet-store", new PetStoreHealthCheck());
-
-        // Authentication / Authorization
-        environment.jersey().register(new AuthDynamicFeature(
-                new OAuthCredentialAuthFilter.Builder<User>()
-                        .setAuthenticator(new TokenAuthenticator())
-                        .setAuthorizer(new UserAuthorizer())
-                        .setPrefix("Bearer")
-                        .buildAuthFilter()));
-        environment.jersey().register(RolesAllowedDynamicFeature.class);
-        environment.jersey().register(new AuthValueFactoryProvider.Binder<>(User.class));
 
         // Attach all of our resource instances against the Jersey servlet
         environment.jersey().register(new EventResource());
         environment.jersey().register(new IndexResource(configuration));
         environment.jersey().register(new PetResource(petDAO));
+
+        // start:entitlements
+        // environment.jersey().register(new EntitlementsValidator(entitlements, petDAO));
+        // end:entitlements
     }
 }

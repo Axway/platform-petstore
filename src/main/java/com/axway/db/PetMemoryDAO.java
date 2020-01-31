@@ -75,4 +75,32 @@ public class PetMemoryDAO implements PetDAO {
     public void remove(String id) {
         this.pets.remove(id);
     }
+
+    /**
+     * Retrieve the total number of stored {@link Pet} instances.
+     *
+     * @return
+     *      a count of {@link Pet} instances in the store.
+     */
+    @Override
+    public long count() {
+        return this.pets.size();
+    }
+
+    /**
+     * Retrieve the number of stored {@link Pet} instances of a given type.
+     *
+     * @return
+     *      a count of {@link Pet} instances in the store.
+     */
+    @Override
+    public long count(String type) {
+        long count = 0;
+        for (Pet pet : this.pets.values()) {
+            if (pet.getType().equalsIgnoreCase(type)) {
+                count += 1;
+            }
+        }
+        return count;
+    }
 }

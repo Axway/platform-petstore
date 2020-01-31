@@ -43,4 +43,20 @@ public interface PetDAO {
      *      the identifier of the {@link Pet} to remove.
      */
     void remove(String id) throws IOException;
+
+    /**
+     * Retrieve the total number of stored {@link Pet} instances.
+     *
+     * @return
+     *      a count of {@link Pet} instances in the store.
+     */
+    long count() throws IOException;
+
+    /**
+     * Retrieve the number of stored {@link Pet} instances of a given type.
+     *
+     * @return
+     *      a count of {@link Pet} instances in the store.
+     */
+    long count(String type) throws IOException;
 }

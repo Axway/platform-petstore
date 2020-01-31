@@ -1,11 +1,14 @@
 package com.axway.resources;
 
 import com.axway.api.Pet;
-import com.axway.auth.User;
+// start:entitlements
+// import com.axway.core.entitlements.Entitlements;
+// end:entitlements
 import com.axway.db.PetDAO;
-import io.dropwizard.auth.Auth;
 
-import javax.annotation.security.RolesAllowed;
+// start:entitlements
+// import javax.validation.Valid;
+// end:entitlements
 import javax.annotation.Nonnull;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -22,9 +25,6 @@ import java.util.stream.Collectors;
 @Path("/api/v1/pet")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
-// start:central
-// @RolesAllowed("ADMIN")
-// end:central
 public class PetResource {
 
     /**
@@ -45,15 +45,13 @@ public class PetResource {
     /**
      * Retrieves all {@link Pet} instances.
      *
-     * @param user
-     *      the authenticated {@link User} principal.
      * @param limit
      *      a parameter used to limit the amount of retrieved pets.
      * @return
      *      a collection of {@link Pet} instances.
      */
     @GET
-    public Collection<Pet> find(@Auth Optional<User> user, @QueryParam("limit") Optional<Integer> limit) throws IOException {
+    public Collection<Pet> find(@QueryParam("limit") Optional<Integer> limit) throws IOException {
         return this.pets.get()
                 .filter(pet -> pet.getId().isPresent())
                 .sorted(Comparator.comparing(left -> left.getId().get()))
@@ -64,8 +62,6 @@ public class PetResource {
     /**
      * Retrieves a {@link Pet} by an identifier.
      *
-     * @param user
-     *      the authenticated {@link User} principal.
      * @param petId
      *      the identifier of the pet to retrieve.
      * @return
@@ -73,34 +69,30 @@ public class PetResource {
      */
     @GET
     @Path("/{petId}")
-    public Optional<Pet> findById(@Auth Optional<User> user, @PathParam("petId") String petId) throws IOException {
+    public Optional<Pet> findById(@PathParam("petId") String petId) throws IOException {
         return this.pets.get(petId);
     }
 
     /**
      * Removes a {@link Pet} by an identifier.
      *
-     * @param user
-     *      the authenticated {@link User} principal.
      * @param petId
      *      the identifier of the pet to remove.
      */
     @DELETE
     @Path("/{petId}")
-    public void removeById(@Auth Optional<User> user, @PathParam("petId") String petId) throws IOException {
+    public void removeById(@PathParam("petId") String petId) throws IOException {
         this.pets.remove(petId);
     }
 
     /**
      * Creates a new {@link Pet} instance.
      *
-     * @param user
-     *      the authenticated {@link User} principal.
      * @param pet
      *      the {@link Pet} instance to store.
      */
     @POST
-    public void create(@Auth Optional<User> user, Pet pet) throws IOException {
+    public void create(/* start:entitlements @Entitlements @Valid */ Pet pet) throws IOException {
         this.pets.create(pet);
     }
 }

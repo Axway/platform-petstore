@@ -1,8 +1,11 @@
 package com.axway;
 
+import com.axway.client.axwayid.AxwayIdConfiguration;
+import com.axway.client.entitlements.EntitlementsConfiguration;
 import com.axway.client.mbaas.MBaasConfiguration;
 import com.axway.client.platform.PlatformConfiguration;
 import com.axway.client.pubsub.PubSubConfiguration;
+
 import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,6 +13,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Configuration class for options related to the running application.
  */
 public class PetStoreConfiguration extends Configuration {
+
+    /**
+     * The internal configuration instance for the AxwayId Service.
+     */
+    private AxwayIdConfiguration axwayId = new AxwayIdConfiguration();
+
+    /**
+     * The internal configuration instance for the Entitlements Service.
+     */
+    private EntitlementsConfiguration entitlements = new EntitlementsConfiguration();
 
     /**
      * The internal MBaaS configuration instance.
@@ -25,6 +38,46 @@ public class PetStoreConfiguration extends Configuration {
      * The internal PubSub configuration instance.
      */
     private PubSubConfiguration pubsub = new PubSubConfiguration();
+
+    /**
+     * JSON getter for the AxwayId configuration.
+     *
+     * @return configuration for AxwayId connectivity.
+     */
+    @JsonProperty("axway_id")
+    public AxwayIdConfiguration getAxwayIdConfiguration() {
+        return this.axwayId;
+    }
+
+    /**
+     * JSON setter for the AxwayId configuration.
+     *
+     * @param axwayId configuration for AxwayId connectivity.
+     */
+    @JsonProperty("axway_id")
+    public void setEntitlementsConfiguration(AxwayIdConfiguration axwayId) {
+        this.axwayId = axwayId;
+    }
+
+    /**
+     * JSON getter for the Entitlements Service configuration.
+     *
+     * @return configuration for ES connectivity.
+     */
+    @JsonProperty("entitlements")
+    public EntitlementsConfiguration getEntitlementsConfiguration() {
+        return entitlements;
+    }
+
+    /**
+     * JSON setter for the Entitlements Service configuration.
+     *
+     * @param entitlements configuration for ES connectivity.
+     */
+    @JsonProperty("entitlements")
+    public void setEntitlementsConfiguration(EntitlementsConfiguration entitlements) {
+        this.entitlements = entitlements;
+    }
 
     /**
      * JSON getter for the MBaaS configuration.

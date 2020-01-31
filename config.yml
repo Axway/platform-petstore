@@ -24,3 +24,11 @@ server:
     - type: http
       port: 8081
       bindHost: 0.0.0.0
+entitlements:
+  uri: ""
+  org: ""
+axway_id:
+  client_id: ""
+  client_secret: ""
+  uri: "https://login-preprod.axway.com"
+  realm: "Broker"

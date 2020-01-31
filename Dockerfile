@@ -33,7 +33,9 @@ WORKDIR /opt/axway/petstore
 # system dependencies to ensure everything is latest. This
 # should run early in the image build so it's cached in any
 # future builds, because it takes a fairly long time.
-RUN apt-get update && apt-get upgrade -y
+RUN apt-get update && \
+	apt-get upgrade -y && \
+	rm -rf /var/lib/apt/lists/*
 
 # As part of the Journey To The Cloud criteria, we include Tini to ensure
 # that our application correctly listens to signals from Docker for things
@@ -49,9 +51,9 @@ COPY --from=maven target/platform-*.jar ./
 
 # Again for the JTTC critera, we set a non-root user for the image so
 # that the application is not running as the root user when started.
-RUN chgrp -R 0 /opt/axway
-RUN chmod -R g=u /opt/axway
-RUN chmod g+x /opt/axway/petstore/platform-*.jar
+RUN chgrp -R 0 /opt/axway && \
+	chmod -R g=u /opt/axway && \
+	chmod g+x /opt/axway/petstore/platform-*.jar
 USER 1001
 
 # Finally we configure the startup command to run our service!

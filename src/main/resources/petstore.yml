@@ -5,9 +5,9 @@ info:
   license:
     name: MIT
 servers:
-  - url: http://petstore.swagger.io/api/v1
+  - url: http://petstore.swagger.io
 paths:
-  /event:
+  /api/v1/event:
     post:
       summary: Receive a PubSub event
       operationId: receive
@@ -22,7 +22,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /pet:
+  /api/v1/pet:
     get:
       summary: List all pets
       operationId: find
@@ -68,7 +68,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-  /pet/{petId}:
+  /api/v1/pet/{petId}:
     get:
       summary: Info for a specific pet
       operationId: findById

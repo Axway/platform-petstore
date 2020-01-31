@@ -66,6 +66,7 @@
 
 <script>
 	let redrawGrid;
+	let pathPrefix = location.pathname !== '/' ? location.pathname : '';
 	let prefix = 'ws';
 	if (location.protocol.startsWith('https')) {
 		prefix += 's';
@@ -166,7 +167,7 @@
 					redrawGrid();
 				}
 			});
-			request.open('POST', '/api/v1/pet', true);
+			request.open('POST', pathPrefix + '/api/v1/pet', true);
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send(JSON.stringify(data));
 		}
@@ -196,7 +197,7 @@
 			request.addEventListener("load", function () {
 				self.setState({ pets: JSON.parse(this.responseText) });
 			});
-			request.open('GET', '/api/v1/pet');
+			request.open('GET', pathPrefix + '/api/v1/pet');
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send();
 		}
@@ -235,7 +236,7 @@
 			request.addEventListener("load", () => {
 				this.tick();
 			});
-			request.open('DELETE', '/api/v1/pet/' + id);
+			request.open('DELETE', pathPrefix + '/api/v1/pet/' + id);
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send();
 		}

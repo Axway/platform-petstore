@@ -250,12 +250,8 @@
 			let children = [];
 			let deleteClass = 'pet-del';
 
-			if (Appc.loggedIn()) {
-				let session = Appc.data('session');
-
-				if (session.role !== 'administrator') {
-					deleteClass += ' d-none';
-				}
+			if (!Appc.loggedIn() || Appc.data('session').role !== 'administrator') {
+				deleteClass += ' d-none';
 			}
 
 			this.state.pets.forEach(pet => {

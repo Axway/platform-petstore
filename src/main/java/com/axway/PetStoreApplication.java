@@ -18,6 +18,7 @@ import com.axway.client.socket.WebSocketClient;
 import com.axway.db.PetDAO;
 import com.axway.db.PetMemoryDAO;
 import com.axway.health.PetStoreHealthCheck;
+import com.axway.resources.ApiDocResource;
 import com.axway.resources.EventResource;
 import com.axway.resources.IndexResource;
 import com.axway.resources.PetResource;
@@ -104,6 +105,7 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         environment.jersey().register(new EventResource());
         environment.jersey().register(new IndexResource(configuration));
         environment.jersey().register(new PetResource(petDAO));
+        environment.jersey().register(new ApiDocResource());
 
         // start:entitlements
         // environment.jersey().register(new EntitlementsValidator(entitlements, petDAO));

@@ -23,6 +23,7 @@ import com.axway.resources.EventResource;
 import com.axway.resources.IndexResource;
 import com.axway.resources.PetResource;
 import io.dropwizard.Application;
+import io.dropwizard.jetty.setup.ServletEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
@@ -115,18 +116,21 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         // environment.jersey().register(new EntitlementsValidator(entitlements, petDAO));
         // end:entitlements
 
-        // Setup CORS
-        enableCorsHeaders(environment);
+        // Setup CORS to restrict requests
+        enableCorsHeaders(environment.servlets());
     }
 
-    private void enableCorsHeaders(Environment env) {
-        final FilterRegistration.Dynamic cors = env.servlets().addFilter("CORS", CrossOriginFilter.class);
+    /**
+     * Enables CORS options on the API.
+     *
+     * @param servlet
+     *      the Dropwizard {@link ServletEnvironment} to configure for CORS.
+     */
+    private void enableCorsHeaders(ServletEnvironment servlet) {
+        FilterRegistration.Dynamic cors = servlet.addFilter("CORS", CrossOriginFilter.class);
 
-        // Configure CORS parameters
         cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
         cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "OPTIONS,GET,PUT,POST,DELETE,HEAD");
-
-        // Add URL mapping
         cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 }

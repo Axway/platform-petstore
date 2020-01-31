@@ -69,20 +69,4 @@ public class ApiResource {
 
         return cloned;
     }
-
-    /**
-     * Get the OAS doc in YAML format.
-     *
-     * @param uriInfo
-     *      The request {@link UriInfo}.
-     * @return
-     *      The API doc as a YAML string.
-     * @throws IOException
-     *      If there are problems generating the doc.
-     */
-    @GET
-    @Produces({ "text/yaml", "application/yaml", "application/x-yaml" })
-    public String retrieveYaml(@Context UriInfo uriInfo) throws IOException {
-        return MAPPER.writeValueAsString(retrieveJson(uriInfo));
-    }
 }

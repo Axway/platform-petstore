@@ -23,6 +23,8 @@ import com.axway.resources.EventResource;
 import com.axway.resources.IndexResource;
 import com.axway.resources.PetResource;
 import io.dropwizard.Application;
+import io.dropwizard.configuration.EnvironmentVariableSubstitutor;
+import io.dropwizard.configuration.SubstitutingSourceProvider;
 import io.dropwizard.jetty.setup.ServletEnvironment;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
@@ -65,6 +67,13 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
      */
     @Override
     public void initialize(Bootstrap<PetStoreConfiguration> bootstrap) {
+        // Enable variable substitution with environment variables
+        bootstrap.setConfigurationSourceProvider(
+                new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(),
+                        new EnvironmentVariableSubstitutor(false)
+                )
+        );
+
         bootstrap.addBundle(new ViewBundle<>());
         bootstrap.addBundle(new WebsocketBundle(WebSocketClient.class));
     }

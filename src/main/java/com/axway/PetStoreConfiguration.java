@@ -1,6 +1,7 @@
 package com.axway;
 
 import com.axway.client.axwayid.AxwayIdConfiguration;
+import com.axway.client.central.CentralConfiguration;
 import com.axway.client.entitlements.EntitlementsConfiguration;
 import com.axway.client.mbaas.MBaasConfiguration;
 import com.axway.client.platform.PlatformConfiguration;
@@ -38,6 +39,11 @@ public class PetStoreConfiguration extends Configuration {
      * The internal PubSub configuration instance.
      */
     private PubSubConfiguration pubsub = new PubSubConfiguration();
+
+    /**
+     * The internal Central configuration instance.
+     */
+    private CentralConfiguration central = new CentralConfiguration();
 
     /**
      * JSON getter for the AxwayId configuration.
@@ -141,4 +147,26 @@ public class PetStoreConfiguration extends Configuration {
     public void setPubSubConfiguration(PubSubConfiguration configuration) {
         this.pubsub = configuration;
     }
+
+    /**
+     * JSON getter for the Central configuration.
+     *
+     * @return a {@link CentralConfiguration} instance.
+     */
+    @JsonProperty("central")
+    public CentralConfiguration getCentralConfiguration() {
+        return this.central;
+    }
+
+    /**
+     * JSON setter for the Central configuration.
+     *
+     * @param configuration
+     *      the {@link CentralConfiguration} for Central.
+     */
+    @JsonProperty("central")
+    public void setCentralConfiguration(CentralConfiguration configuration) {
+        this.central = configuration;
+    }
+
 }

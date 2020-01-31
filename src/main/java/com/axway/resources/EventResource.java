@@ -35,6 +35,8 @@ public class EventResource {
         //
         // To enable this behaviour, you can emit a reload message to connected UIs:
         //
+        // start:pubsub
         // WebSocketClient.send("RELOAD");
+        // end:pubsub
     }
 }

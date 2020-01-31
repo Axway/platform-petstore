@@ -149,7 +149,7 @@
 			request.addEventListener("load", function () {
 				if (this.status === 422) {
 					self.setState({
-						errorMessage: 'Animal type limit reached'
+						errorMessage: data.type + ' type limit reached, try some 🐟!'
 					});
 				} else if (this.status !== 204) {
 					self.setState({

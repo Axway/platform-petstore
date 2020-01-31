@@ -79,14 +79,18 @@ public class IndexResource {
          */
         public String getApiUrl() {
             String restUrl = this.configuration.getCentralConfiguration().getProxy().toString();
-            if (restUrl.equals("")) {
-                String contextPath = ((DefaultServerFactory) this.configuration.getServerFactory()).getApplicationContextPath();
-                restUrl = UriBuilder.fromPath(contextPath)
-                        .path("/api/v1")
-                        .build()
-                        .toString();
+
+            if (restUrl.isEmpty()) {
+                return restUrl;
             }
-            return restUrl;
+
+            String contextPath = ((DefaultServerFactory) this.configuration.getServerFactory())
+                    .getApplicationContextPath();
+
+            return UriBuilder.fromPath(contextPath)
+                    .path("/api/v1")
+                    .build()
+                    .toString();
         }
     }
 }

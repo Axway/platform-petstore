@@ -3,6 +3,8 @@ axway_id:
   realm: ""
   client_id: ""
   client_secret: ""
+central:
+  proxy: ${CENTRAL_PROXY_URL:-"/api/v1"}
 entitlements:
   uri: ""
   org: ""
@@ -21,5 +23,3 @@ logging:
   level: "INFO"
   loggers:
     com.axway: "DEBUG"
-central:
-  proxy: ${CENTRAL_PROXY_URL:-""}

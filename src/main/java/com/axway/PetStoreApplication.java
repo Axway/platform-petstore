@@ -72,9 +72,10 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
     public void initialize(Bootstrap<PetStoreConfiguration> bootstrap) {
         // Enable variable substitution with environment variables
         bootstrap.setConfigurationSourceProvider(
-                new SubstitutingSourceProvider(bootstrap.getConfigurationSourceProvider(),
-                        new EnvironmentVariableSubstitutor(false)
-                )
+            new SubstitutingSourceProvider(
+                bootstrap.getConfigurationSourceProvider(),
+                new EnvironmentVariableSubstitutor(false)
+            )
         );
 
         bootstrap.addBundle(new ViewBundle<>());

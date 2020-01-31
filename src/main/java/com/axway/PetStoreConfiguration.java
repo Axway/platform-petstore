@@ -21,6 +21,11 @@ public class PetStoreConfiguration extends Configuration {
     private AxwayIdConfiguration axwayId = new AxwayIdConfiguration();
 
     /**
+     * The internal Central configuration instance.
+     */
+    private CentralConfiguration central = new CentralConfiguration();
+
+    /**
      * The internal configuration instance for the Entitlements Service.
      */
     private EntitlementsConfiguration entitlements = new EntitlementsConfiguration();
@@ -41,11 +46,6 @@ public class PetStoreConfiguration extends Configuration {
     private PubSubConfiguration pubsub = new PubSubConfiguration();
 
     /**
-     * The internal Central configuration instance.
-     */
-    private CentralConfiguration central = new CentralConfiguration();
-
-    /**
      * JSON getter for the AxwayId configuration.
      *
      * @return configuration for AxwayId connectivity.
@@ -58,11 +58,33 @@ public class PetStoreConfiguration extends Configuration {
     /**
      * JSON setter for the AxwayId configuration.
      *
-     * @param axwayId configuration for AxwayId connectivity.
+     * @param configuration
+     *      the {@link AxwayIdConfiguration} for Axway ID.
      */
     @JsonProperty("axway_id")
-    public void setEntitlementsConfiguration(AxwayIdConfiguration axwayId) {
-        this.axwayId = axwayId;
+    public void setAxwayIdConfiguration(AxwayIdConfiguration configuration) {
+        this.axwayId = configuration;
+    }
+
+    /**
+     * JSON getter for the Central configuration.
+     *
+     * @return a {@link CentralConfiguration} instance.
+     */
+    @JsonProperty("central")
+    public CentralConfiguration getCentralConfiguration() {
+        return this.central;
+    }
+
+    /**
+     * JSON setter for the Central configuration.
+     *
+     * @param configuration
+     *      the {@link CentralConfiguration} for Central.
+     */
+    @JsonProperty("central")
+    public void setCentralConfiguration(CentralConfiguration configuration) {
+        this.central = configuration;
     }
 
     /**
@@ -147,26 +169,4 @@ public class PetStoreConfiguration extends Configuration {
     public void setPubSubConfiguration(PubSubConfiguration configuration) {
         this.pubsub = configuration;
     }
-
-    /**
-     * JSON getter for the Central configuration.
-     *
-     * @return a {@link CentralConfiguration} instance.
-     */
-    @JsonProperty("central")
-    public CentralConfiguration getCentralConfiguration() {
-        return this.central;
-    }
-
-    /**
-     * JSON setter for the Central configuration.
-     *
-     * @param configuration
-     *      the {@link CentralConfiguration} for Central.
-     */
-    @JsonProperty("central")
-    public void setCentralConfiguration(CentralConfiguration configuration) {
-        this.central = configuration;
-    }
-
 }

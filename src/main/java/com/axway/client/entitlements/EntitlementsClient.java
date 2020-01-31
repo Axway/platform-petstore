@@ -88,7 +88,7 @@ public class EntitlementsClient {
                     for (JsonNode offering : subscription.path("offerings")) {
                         for (JsonNode entitlement : offering.path("entitlements")) {
                             entitlements.put(
-                                entitlement.path("name").asText(),
+                                entitlement.path("name").asText().toLowerCase(),
                                 entitlement.path("value").asLong()
                             );
                         }

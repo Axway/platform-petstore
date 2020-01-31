@@ -57,7 +57,7 @@ public class EntitlementsValidator implements ConstraintValidator<Entitlements, 
     public boolean isValid(Pet pet, ConstraintValidatorContext context) {
         try {
             // fetch the type and entitlements
-            String type = pet.getType();
+            String type = pet.getType().toLowerCase();
             Map<String, Long> entitlements = this.entitlements.getEntitlements();
 
             // normalize the type value

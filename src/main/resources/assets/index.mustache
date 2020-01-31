@@ -2,15 +2,15 @@
 <html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="shortcut icon" href="https://www.axway.com/themes/custom/axway/favicon.ico" type="image/vnd.microsoft.icon">
-    <title>Pet Store</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="shortcut icon" href="https://www.axway.com/themes/custom/axway/favicon.ico" type="image/vnd.microsoft.icon">
+	<title>Pet Store</title>
 
-    <!-- CSS -->
-    <link class="platform-theme theme-light" rel="stylesheet" type="text/css"
-          href="https://d3cd0f9bgii318.cloudfront.net/current/css/style.css" media="">
-    <style>
+	<!-- CSS -->
+	<link class="platform-theme theme-light" rel="stylesheet" type="text/css"
+		  href="https://d3cd0f9bgii318.cloudfront.net/current/css/style.css" media="">
+	<style>
 		body {
 			padding-top: 49px;
 		}
@@ -30,45 +30,44 @@
 		}
 	</style>
 
-    <!-- JS -->
-    <script src="https://{{ platformHostname }}/unified-nav.js?login=1&signin=0&data=1&feed=0&analytics=0"></script>
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
-    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+	<!-- JS -->
+	<script src="https://{{ platformHostname }}/unified-nav.js?login=1&signin=0&data=1&feed=0&analytics=0"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+	<script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+	<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
 </head>
 
 <body>
-    <!-- banner -->
-    <div class="bg-varicose-vein txt-white">
-        <div class="container pt-45 pb-4 text-center">
-            <div class="display-4">Pet Store</div>
-            <p>
-                <span id="app-user-info"></span>
-            </p>
-        </div>
-    </div>
-    <!-- buttons -->
-    <div class="pb-0 pt-25 pr-25 text-right">
-        <button class="btn btn-primary" data-toggle="modal" data-target="#add-pet-modal">
-            Add Pet
-        </button>
-    </div>
-    <!-- content -->
-    <div class="container-fluid pt-25 pb-45 pr-45 pl-45">
-        <div id="pet-modal"></div>
+	<!-- banner -->
+	<div class="bg-varicose-vein txt-white">
+		<div class="container pt-45 pb-4 text-center">
+			<div class="display-4">Pet Store</div>
+			<p>
+				<span id="app-user-info"></span>
+			</p>
+		</div>
+	</div>
+	<!-- buttons -->
+	<div class="pb-0 pt-25 pr-25 text-right">
+		<button class="btn btn-primary" data-toggle="modal" data-target="#add-pet-modal">
+			Add Pet
+		</button>
+	</div>
+	<!-- content -->
+	<div class="container-fluid pt-25 pb-45 pr-45 pl-45">
+		<div id="pet-modal"></div>
 
-        <!-- pet grid -->
-        <div id="pet-tiles" class="row"></div>
-    </div>
+		<!-- pet grid -->
+		<div id="pet-tiles" class="row"></div>
+	</div>
 </body>
 
 <script>
-	let session;
-	let redrawGrid;
-	let redrawModal;
 	let prefix = 'ws';
+	let redrawGrid;
+
 	if (location.protocol.startsWith('https')) {
 		prefix += 's';
 	}
@@ -76,7 +75,12 @@
 	// react components
 	class UserInfo extends React.Component {
 		render() {
-			return React.createElement('span', null, null, `You are logged as ${this.props.firstname} ${this.props.lastname}, ${this.props.role} in ${this.props.org}`);
+			return React.createElement(
+				'span',
+				null,
+				null,
+				`You are logged as ${this.props.firstname} ${this.props.lastname}, ${this.props.role} in ${this.props.org}`
+			);
 		}
 	}
 
@@ -93,24 +97,35 @@
 			};
 
 			this.handleChange = this.handleChange.bind(this);
-			redrawModal = this.redraw.bind(this);
 		}
 
-		redraw() {
-			let types = [];
-			if (session && session.result && session.result.org) {
-				Object.keys(session.result.org.entitlements).forEach((entitlement) => {
-					if (entitlement.includes('PetStore.')) {
-						let type = entitlement.split('.')[1];
-						types.push(type);
-					}
-				});
-			}
-			types.push('Other');
+		componentDidMount() {
+			var self = this;
+			var request = new XMLHttpRequest();
+			request.addEventListener("load", function () {
+				try {
+					let types = [];
+					let session = JSON.parse(this.responseText);
 
-			this.setState({
-				petTypes: types
+					Object.keys(session.result.org.entitlements).forEach(function (entitlement) {
+						if (entitlement.includes('PetStore.')) {
+							types.push(entitlement.split('.')[1]);
+						}
+					});
+
+					types.push('Other');
+
+					self.setState({
+						petTypes: types
+					});
+				} catch(e) {
+					console.log(e);
+				}
 			});
+			request.open('GET', 'https://{{ platformHostname }}/api/v1/auth/findSession');
+			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+			request.withCredentials = true; // this option is required send the browser cookies in the request
+			request.send();
 		}
 
 		handleChange(event) {
@@ -133,7 +148,11 @@
 
 			// build pet types
 			this.state.petTypes.forEach((type) => {
-				options.push(React.createElement('option', { key: type }, type));
+				options.push(React.createElement(
+					'option',
+					{ key: type },
+					type
+				));
 			});
 
 			let element =
@@ -152,7 +171,7 @@
 										React.createElement('input', { id: 'add-pet-name', type: 'text', className: 'form-control', name: "petName", value: this.state.petName, onChange: this.handleChange })),
 									React.createElement('div', { className: 'form-group'},
 										React.createElement('label', { className: 'add-pet-type' }, 'Pet Type'),
-										React.createElement('select', { id: 'add-pet-type', className: 'form-control', name: 'petType', value: this.state.petType, onChange: this.handleChange }, options)),
+										React.createElement('select', { id: 'add-pet-type', className: 'form-control', name: 'petType', value: this.state.petTypes[0], onChange: this.handleChange }, options)),
 									React.createElement('div', { className: 'form-group' },
 										React.createElement('label', { htmlFor: 'add-pet-image' }, 'Pet Image'),
 										React.createElement('input', { id: 'add-pet-image', type: 'text', className: 'form-control', name: "petImage", value: this.state.petImage, onChange: this.handleChange }),
@@ -173,6 +192,7 @@
 			};
 
 			let request = new XMLHttpRequest();
+
 			request.addEventListener("load", function () {
 				if (this.status === 422) {
 					self.setState({
@@ -188,10 +208,13 @@
 						petImage: '',
 						errorMessage: false
 					});
+
 					$('#add-pet-modal').modal('hide');
+
 					redrawGrid();
 				}
 			});
+
 			request.open('POST', '/api/v1/pet', true);
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send(JSON.stringify(data));
@@ -267,9 +290,6 @@
 		}
 	}
 
-	ReactDOM.render(React.createElement(PetModal, {}, null), document.getElementById('pet-modal'));
-	ReactDOM.render(React.createElement(PetGrid, {}, null), document.getElementById('pet-tiles'));
-
 	// set unified nav title
 	Appc.afterHeaderRender(function () {
 		Appc.setSitename('Pet Store');
@@ -281,33 +301,25 @@
 		let org = Appc.data('org');
 		let session = Appc.data('session');
 
-		let infoElement = React.createElement(UserInfo, {
-			firstname: user.firstname,
-			lastname: user.lastname,
-			role: session.role,
-			org: org.name
-		});
+		ReactDOM.render(
+			React.createElement(UserInfo, {
+				firstname: user.firstname,
+				lastname: user.lastname,
+				role: session.role,
+				org: org.name
+			}),
+			document.getElementById('app-user-info')
+		);
 
-		ReactDOM.render(infoElement, document.getElementById('app-user-info'));
-	}
+		ReactDOM.render(
+			React.createElement(PetModal, {}, null),
+			document.getElementById('pet-modal')
+		);
 
-	getSession();
-
-	// retrieve session from platform which contains entitlements
-	function getSession() {
-		var request = new XMLHttpRequest();
-		request.addEventListener("load", function () {
-			try {
-				session = JSON.parse(this.responseText);
-				redrawModal();
-			} catch(e) {
-				console.log(e);
-			}
-		});
-		request.open('GET', 'https://{{ platformHostname }}/api/v1/auth/findSession');
-		request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
-		request.withCredentials = true; // this option is required send the browser cookies in the request
-		request.send();
+		ReactDOM.render(
+			React.createElement(PetGrid, {}, null),
+			document.getElementById('pet-tiles')
+		);
 	}
 </script>
 

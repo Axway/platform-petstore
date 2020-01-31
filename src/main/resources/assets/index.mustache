@@ -55,7 +55,7 @@
             Add Pet
         </button>
     </div>
-    <!-- table -->
+    <!-- content -->
     <div class="container-fluid pt-25 pb-45 pr-45 pl-45">
         <div id="pet-modal"></div>
 
@@ -66,6 +66,10 @@
 
 <script>
 	let redrawGrid;
+	let prefix = 'ws';
+	if (location.protocol.startsWith('https')) {
+		prefix += 's';
+	}
 
 	// react components
 	class UserInfo extends React.Component {
@@ -81,7 +85,8 @@
 			this.state = {
 				petName: '',
 				petType: '',
-				petImage: ''
+				petImage: '',
+				errorMessage: false
 			};
 
 			this.handleChange = this.handleChange.bind(this);
@@ -98,6 +103,12 @@
 		}
 
 		render() {
+			let errorClass = 'd-none';
+
+			if (this.state.errorMessage) {
+				errorClass = 'alert alert-danger text-center';
+			}
+
 			let element =
 				React.createElement('div', { id: 'add-pet-modal', className: 'modal fade', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'add-pet-label', 'aria-hidden': 'true' },
 					React.createElement('div', { className: 'modal-dialog', role: 'document' },
@@ -107,6 +118,7 @@
 								React.createElement('button', { type: 'button', className: 'close', 'data-dismiss': 'modal', 'aria-label': 'Close'},
 									React.createElement('span', { 'aria-hidden': 'true'}, '×'))),
 							React.createElement('div', { className: 'modal-body' },
+								React.createElement('div', { className: errorClass, role: 'alert' }, this.state.errorMessage),
 								React.createElement('form', { id: 'form-pet-add' },
 									React.createElement('div', { className: 'form-group '},
 										React.createElement('label', { htmlFor: 'add-pet-name' }, 'Pet Name'),
@@ -126,6 +138,7 @@
 		}
 
 		create() {
+			let self = this;
 			let data = {
 				name: this.state.petName,
 				type: this.state.petType,
@@ -134,22 +147,32 @@
 
 			let request = new XMLHttpRequest();
 			request.addEventListener("load", function () {
-				redrawGrid();
+				if (this.status === 422) {
+					self.setState({
+						errorMessage: 'Animal type limit reached'
+					});
+				} else if (this.status !== 204) {
+					self.setState({
+						errorMessage: 'Unexpected error'
+					});
+				} else {
+					self.setState({
+						petName: '',
+						petType: '',
+						petImage: '',
+						errorMessage: false
+					});
+					$('#add-pet-modal').modal('hide');
+					redrawGrid();
+				}
 			});
 			request.open('POST', '/api/v1/pet', true);
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send(JSON.stringify(data));
-
-			$('#add-pet-modal').modal('hide');
 		}
 	}
 
 	class PetGrid extends React.Component {
-		let prefix = 'ws';
-		if (location.protocol.startsWith('https')) {
-			prefix += 's';
-		}
-
 		ws = new WebSocket(prefix + '://' + location.host + '/ws');
 
 		constructor(props) {

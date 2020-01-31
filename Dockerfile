@@ -42,17 +42,17 @@ ADD https://github.com/krallin/tini/releases/download/v0.18.0/tini ./tini
 RUN chmod +x ./tini
 ENTRYPOINT ["./tini", "--"]
 
+# Now we can copy across the artifacts we need from our build
+# image, directly into the working directory for the service.
+COPY --from=maven config.yml ./
+COPY --from=maven target/platform-*.jar ./
+
 # Again for the JTTC critera, we set a non-root user for the image so
 # that the application is not running as the root user when started.
 RUN chgrp -R 0 /opt/axway
 RUN chmod -R g=u /opt/axway
 RUN chmod g+x /opt/axway/petstore/platform-*.jar
 USER 1001
-
-# Now we can copy across the artifacts we need from our build
-# image, directly into the working directory for the service.
-COPY --from=maven config.yml ./
-COPY --from=maven target/platform-*.jar ./
 
 # Finally we configure the startup command to run our service!
 CMD java -jar platform-*.jar server config.yml

@@ -60,6 +60,11 @@ public class EntitlementsValidator implements ConstraintValidator<Entitlements, 
             String type = pet.getType();
             Map<String, Long> entitlements = this.entitlements.getEntitlements();
 
+            // normalize the type value
+            if (!type.endsWith("s")) {
+                type += "s";
+            }
+
             // if the type is unknown, it's allowed
             if (!entitlements.containsKey(type)) {
                 return true;

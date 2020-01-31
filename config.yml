@@ -21,3 +21,5 @@ logging:
   level: "INFO"
   loggers:
     com.axway: "DEBUG"
+central:
+  proxy: ${CENTRAL_PROXY_URL:-""}

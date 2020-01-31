@@ -214,8 +214,7 @@
 					redrawGrid();
 				}
 			});
-
-			request.open('POST', '/api/v1/pet', true);
+			request.open('POST', '{{ apiUrl }}/pet', true);
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send(JSON.stringify(data));
 		}
@@ -245,7 +244,7 @@
 			request.addEventListener("load", function () {
 				self.setState({ pets: JSON.parse(this.responseText) });
 			});
-			request.open('GET', '/api/v1/pet');
+			request.open('GET', '{{ apiUrl }}/pet');
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send();
 		}
@@ -282,7 +281,7 @@
 			request.addEventListener("load", () => {
 				this.tick();
 			});
-			request.open('DELETE', '/api/v1/pet/' + id);
+			request.open('DELETE', '{{ apiUrl }}/pet/' + id);
 			request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
 			request.send();
 		}

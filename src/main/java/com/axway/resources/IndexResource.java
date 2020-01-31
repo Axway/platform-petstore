@@ -1,12 +1,14 @@
 package com.axway.resources;
 
 import com.axway.PetStoreConfiguration;
+import io.dropwizard.server.DefaultServerFactory;
 import io.dropwizard.views.View;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * Rendering resource for the single page app in browser.
@@ -68,6 +70,23 @@ public class IndexResource {
          */
         public String getPlatformHostname() {
             return this.configuration.getPlatformConfiguration().getHostname();
+        }
+
+        /**
+         * Retrieves the URI for the REST API.
+         *
+         * @return {@link String} the URI for the REST API.
+         */
+        public String getApiUrl() {
+            String restUrl = this.configuration.getCentralConfiguration().getProxy().toString();
+            if (restUrl.equals("")) {
+                String contextPath = ((DefaultServerFactory) this.configuration.getServerFactory()).getApplicationContextPath();
+                restUrl = UriBuilder.fromPath(contextPath)
+                        .path("/api/v1")
+                        .build()
+                        .toString();
+            }
+            return restUrl;
         }
     }
 }

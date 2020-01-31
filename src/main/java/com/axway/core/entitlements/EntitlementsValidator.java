@@ -15,8 +15,8 @@ import com.axway.db.PetDAO;
 /**
  * Validation class for checking entitlements against pet creation.
  *
- * This will check the current amount of created pets and only allow new pets to be
- * created if the entitlement has not been passed.
+ * This will check the current amount of created pets and only allow new pets to
+ * be created if the entitlement has not been passed.
  */
 public class EntitlementsValidator implements ConstraintValidator<Entitlements, Pet> {
 
@@ -33,10 +33,9 @@ public class EntitlementsValidator implements ConstraintValidator<Entitlements, 
     /**
      * Creates a new validation instance with entitlements and pet storage.
      *
-     * @param entitlements
-     *      a client instance used to fetch entitlements from the service.
-     * @param pets
-     *      a pet storage instance used to retrieve pet counts.
+     * @param entitlements a client instance used to fetch entitlements from the
+     *                     service.
+     * @param pets         a pet storage instance used to retrieve pet counts.
      */
     public EntitlementsValidator(@Nonnull EntitlementsClient entitlements, @Nonnull PetDAO pets) {
         this.entitlements = Objects.requireNonNull(entitlements);
@@ -44,14 +43,12 @@ public class EntitlementsValidator implements ConstraintValidator<Entitlements, 
     }
 
     /**
-     * Determines whether the pet instance being created is within entitlement bounds.
+     * Determines whether the pet instance being created is within entitlement
+     * bounds.
      *
-     * @param pet
-     *      the pet instance the caller is trying to create.
-     * @param context
-     *      the request contest which may be used in validation.
-     * @return
-     *      true if the pet is able to be created (within entitlement bounds).
+     * @param pet     the pet instance the caller is trying to create.
+     * @param context the request contest which may be used in validation.
+     * @return true if the pet is able to be created (within entitlement bounds).
      */
     @Override
     public boolean isValid(Pet pet, ConstraintValidatorContext context) {
@@ -59,11 +56,6 @@ public class EntitlementsValidator implements ConstraintValidator<Entitlements, 
             // fetch the type and entitlements
             String type = pet.getType().toLowerCase();
             Map<String, Long> entitlements = this.entitlements.getEntitlements();
-
-            // normalize the type value
-            if (!type.endsWith("s")) {
-                type += "s";
-            }
 
             // if the type is unknown, it's allowed
             if (!entitlements.containsKey(type)) {

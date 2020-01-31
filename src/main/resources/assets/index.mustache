@@ -65,7 +65,9 @@
 </body>
 
 <script>
+	let session;
 	let redrawGrid;
+	let redrawModal;
 	let prefix = 'ws';
 	if (location.protocol.startsWith('https')) {
 		prefix += 's';
@@ -84,12 +86,31 @@
 
 			this.state = {
 				petName: '',
-				petType: '',
+				petType: 'Other',
+				petTypes: [ 'Other' ],
 				petImage: '',
 				errorMessage: false
 			};
 
 			this.handleChange = this.handleChange.bind(this);
+			redrawModal = this.redraw.bind(this);
+		}
+
+		redraw() {
+			let types = [];
+			if (session && session.result && session.result.org) {
+				Object.keys(session.result.org.entitlements).forEach((entitlement) => {
+					if (entitlement.includes('PetStore.')) {
+						let type = entitlement.split('.')[1];
+						types.push(type);
+					}
+				});
+			}
+			types.push('Other');
+
+			this.setState({
+				petTypes: types
+			});
 		}
 
 		handleChange(event) {
@@ -103,11 +124,17 @@
 		}
 
 		render() {
+			let options = [];
 			let errorClass = 'd-none';
 
 			if (this.state.errorMessage) {
 				errorClass = 'alert alert-danger text-center';
 			}
+
+			// build pet types
+			this.state.petTypes.forEach((type) => {
+				options.push(React.createElement('option', { key: type }, type));
+			});
 
 			let element =
 				React.createElement('div', { id: 'add-pet-modal', className: 'modal fade', tabIndex: '-1', role: 'dialog', 'aria-labelledby': 'add-pet-label', 'aria-hidden': 'true' },
@@ -125,7 +152,7 @@
 										React.createElement('input', { id: 'add-pet-name', type: 'text', className: 'form-control', name: "petName", value: this.state.petName, onChange: this.handleChange })),
 									React.createElement('div', { className: 'form-group'},
 										React.createElement('label', { className: 'add-pet-type' }, 'Pet Type'),
-										React.createElement('input', { id: 'add-pet-type', type: 'text', className: 'form-control', name: "petType", value: this.state.petType, onChange: this.handleChange })),
+										React.createElement('select', { id: 'add-pet-type', className: 'form-control', name: 'petType', value: this.state.petType, onChange: this.handleChange }, options)),
 									React.createElement('div', { className: 'form-group' },
 										React.createElement('label', { htmlFor: 'add-pet-image' }, 'Pet Image'),
 										React.createElement('input', { id: 'add-pet-image', type: 'text', className: 'form-control', name: "petImage", value: this.state.petImage, onChange: this.handleChange }),
@@ -158,7 +185,6 @@
 				} else {
 					self.setState({
 						petName: '',
-						petType: '',
 						petImage: '',
 						errorMessage: false
 					});
@@ -263,6 +289,25 @@
 		});
 
 		ReactDOM.render(infoElement, document.getElementById('app-user-info'));
+	}
+
+	getSession();
+
+	// retrieve session from platform which contains entitlements
+	function getSession() {
+		var request = new XMLHttpRequest();
+		request.addEventListener("load", function () {
+			try {
+				session = JSON.parse(this.responseText);
+				redrawModal();
+			} catch(e) {
+				console.log(e);
+			}
+		});
+		request.open('GET', 'https://{{ platformHostname }}/api/v1/auth/findSession');
+		request.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+		request.withCredentials = true; // this option is required send the browser cookies in the request
+		request.send();
 	}
 </script>
 

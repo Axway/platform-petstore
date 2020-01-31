@@ -1,3 +1,11 @@
+axway_id:
+  uri: ""
+  realm: ""
+  client_id: ""
+  client_secret: ""
+entitlements:
+  uri: ""
+  org: ""
 mbaas:
   key: ""
   hostname: ""
@@ -13,14 +21,3 @@ logging:
   level: "INFO"
   loggers:
     com.axway: "DEBUG"
-server:
-  adminContextPath: /
-  applicationContextPath: /
-  applicationConnectors:
-    - type: http
-      port: 8080
-      bindHost: 0.0.0.0
-  adminConnectors:
-    - type: http
-      port: 8081
-      bindHost: 0.0.0.0

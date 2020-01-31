@@ -23,4 +23,3 @@ logging:
     com.axway: "DEBUG"
 central:
   proxy: ${CENTRAL_PROXY_URL:-""}
-  

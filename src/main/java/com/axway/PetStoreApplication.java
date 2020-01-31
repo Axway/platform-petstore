@@ -17,6 +17,9 @@ import com.axway.client.socket.WebSocketClient;
 // end:entitlements
 import com.axway.db.PetDAO;
 import com.axway.db.PetMemoryDAO;
+// start:mbaas
+// import com.axway.db.PetMbaasDAO;
+// end:mbaas
 import com.axway.health.PetStoreHealthCheck;
 import com.axway.resources.ApiResource;
 import com.axway.resources.EventResource;

@@ -1,5 +1,6 @@
 package com.axway.api;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -24,6 +25,7 @@ public class Event {
     /**
      * The name of the event instance.
      */
+    @JsonProperty("event")
     private String name;
 
     /**
@@ -49,7 +51,7 @@ public class Event {
      *
      * @return a {@link String} event name.
      */
-    @JsonProperty
+    @JsonIgnore
     public String getName() {
         return this.name;
     }

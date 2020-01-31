@@ -22,11 +22,7 @@
 
 		.pet-del {
 			cursor: pointer;
-			color: gray
-		}
-
-		.pet-type {
-			color: #407ca0;
+			color: gray;
 		}
 	</style>
 
@@ -251,27 +247,25 @@
 
 		render() {
 			let children = [];
-			let canDelete = 'd-none pt-1 px-2 text-nowrap align-middle pet-del';
+			let deleteClass = 'pet-del';
 
-			if (Appc.loggedIn()) {
-				let session = Appc.data('session');
-
-				if (session.role === 'administrator') {
-					canDelete = 'd-inline-block pt-1 px-2 text-nowrap align-middle pet-del';
-				}
+			if (!Appc.loggedIn() || Appc.data('session').role !== 'administrator') {
+				deleteClass += ' d-none';
 			}
 
 			this.state.pets.forEach(pet => {
+				let label = `${pet.name} (${pet.type})`;
+				label = label[0].toUpperCase() + label.slice(1);
+
 				let element =
 					React.createElement('div', { key: pet.id, className: 'col-xl-3 col-lg-4 col-md-6 col-sm-12' },
 						React.createElement('div', { className: 'landing-tile text-center my-25' },
 							React.createElement('div', { className: 'px-25 pt-3' },
 								React.createElement('img', { className: 'pet-grid', src: pet.photo })),
 							React.createElement('div', { className: 'landing-actions bg-feather p-2 pt-1' },
-								React.createElement('span', { className: 'd-inline-block pt-1 px-2 text-nowrap align-middle font-weight-bold' }, pet.name),
-								React.createElement('span', { className: canDelete, onClick: () => this.delete(pet.id) }, 'Delete',
-									React.createElement('i', { className: 'platform-icon-trash icon-sm'})),
-								React.createElement('div', { className: 'pet-type' }, pet.type))));
+								React.createElement('span', { className: 'd-inline-block pt-1 px-2 text-nowrap align-middle font-weight-bold' }, label),
+								React.createElement('div', { className: deleteClass, onClick: () => this.delete(pet.id) }, 'Delete',
+									React.createElement('i', { className: 'pl-2 platform-icon-trash icon-sm'})))));
 				children.push(element);
 			});
 
@@ -291,7 +285,7 @@
 
 	// set unified nav title
 	Appc.afterHeaderRender(function () {
-		Appc.setSitename('Pet Store');
+		Appc.setSitename('Platform Pet Store');
 	});
 
 	// unified nav api

@@ -27,8 +27,12 @@ import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 import io.dropwizard.views.ViewBundle;
 import io.dropwizard.websockets.WebsocketBundle;
+import org.eclipse.jetty.servlets.CrossOriginFilter;
 
+import javax.servlet.DispatcherType;
+import javax.servlet.FilterRegistration;
 import java.io.IOException;
+import java.util.EnumSet;
 
 /**
  * Main application class backing the Platform PetStore application.
@@ -110,5 +114,19 @@ public class PetStoreApplication extends Application<PetStoreConfiguration> {
         // start:entitlements
         // environment.jersey().register(new EntitlementsValidator(entitlements, petDAO));
         // end:entitlements
+
+        // Setup CORS
+        enableCorsHeaders(environment);
+    }
+
+    private void enableCorsHeaders(Environment env) {
+        final FilterRegistration.Dynamic cors = env.servlets().addFilter("CORS", CrossOriginFilter.class);
+
+        // Configure CORS parameters
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_ORIGINS_PARAM, "*");
+        cors.setInitParameter(CrossOriginFilter.ALLOWED_METHODS_PARAM, "OPTIONS,GET,PUT,POST,DELETE,HEAD");
+
+        // Add URL mapping
+        cors.addMappingForUrlPatterns(EnumSet.allOf(DispatcherType.class), true, "/*");
     }
 }
